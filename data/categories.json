@@ -1,0 +1,16 @@
+{
+  "categories": [
+    {
+      "id": "fifaSeason",
+      "name": "FIFA Season"
+    },
+    {
+      "id": "gamingHouseTour",
+      "name": "Gaming House Tour"
+    },
+    {
+      "id": "polarLens",
+      "name": "Polar Lens"
+    }
+  ]
+}

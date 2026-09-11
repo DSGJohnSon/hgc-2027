@@ -1,0 +1,91 @@
+{
+  "sections": [
+    {
+      "type": "aboutHero",
+      "data": {
+        "id": "contact-hero",
+        "title": "NOUS CONTACTER",
+        "paragraphs": [
+          "Vous avez une question, une suggestion ou souhaitez collaborer avec nous ? N'hésitez pas à nous contacter via nos réseaux sociaux ou notre formulaire de contact."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/1.webp",
+          "alt": "Contactez Holiday Geek Cup",
+          "position": "right"
+        }
+      }
+    },
+    {
+      "type": "textSection",
+      "data": {
+        "subtitle": "NOS RÉSEAUX SOCIAUX",
+        "title": "REJOIGNEZ-NOUS EN LIGNE",
+        "paragraphs": [
+          "Suivez-nous sur nos réseaux sociaux pour rester informé de nos événements, actualités et coulisses de l'association."
+        ],
+        "alignment": "center"
+      }
+    },
+    {
+      "type": "featureGrid",
+      "data": {
+        "subtitle": "RESTEZ CONNECTÉS",
+        "title": "NOS PLATEFORMES",
+        "columns": 3,
+        "cards": [
+          {
+            "title": "INSTAGRAM",
+            "icon": "📸",
+            "description": "Suivez nos événements en direct et découvrez les coulisses de l'HGC.",
+            "link": "https://www.instagram.com/holiday_geek_cup/"
+          },
+          {
+            "title": "FACEBOOK",
+            "icon": "👥",
+            "description": "Rejoignez notre communauté et participez aux discussions.",
+            "link": "https://www.facebook.com/HolidayGeekCup/"
+          },
+          {
+            "title": "X (TWITTER)",
+            "icon": "🐦",
+            "description": "Restez informé de nos actualités et annonces en temps réel.",
+            "link": "https://x.com/HolidayGeekCup"
+          }
+        ]
+      }
+    },
+    {
+      "type": "textSection",
+      "data": {
+        "subtitle": "NOTRE EMAIL",
+        "title": "CONTACT@HOLIDAYGEEKCUP.FR",
+        "paragraphs": [
+          "Pour toute demande professionnelle, partenariat ou question spécifique, vous pouvez nous écrire directement à notre adresse email."
+        ],
+        "alignment": "center"
+      }
+    },
+    {
+      "type": "cta",
+      "data": {
+        "title": "ENVOYEZ-NOUS UN MESSAGE",
+        "subtitle": "FORMULAIRE DE CONTACT",
+        "paragraph": "Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais. Vous pouvez également nous contacter directement par email à contact@holidaygeekcup.fr",
+        "ctas": [
+          {
+            "text": "NOUS ÉCRIRE PAR EMAIL",
+            "href": "mailto:contact@holidaygeekcup.fr",
+            "variant": "primary",
+            "size": "lg"
+          }
+        ]
+      },
+      "props": {
+        "glowMode": "centerBlinking",
+        "backgroundColor": "gray",
+        "speed": 60,
+        "opacity": 1
+      }
+    }
+  ]
+}

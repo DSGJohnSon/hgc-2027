@@ -1,0 +1,336 @@
+{
+  "sections": [
+    {
+      "type": "hero",
+      "data": {
+        "mainHero": {
+          "subtitle": "# La compétition E-Sport de proximité #",
+          "title": {
+            "line1": "L'évènement gaming qui",
+            "line2": "débarque chez toi"
+          },
+          "buttons": [
+            {
+              "label": "évènements à venir",
+              "href": "/evenements",
+              "variant": "primary",
+              "textUpperCase": true
+            },
+            {
+              "label": "découvrir hgc",
+              "href": "/a-propos",
+              "variant": "secondary",
+              "textUpperCase": true
+            }
+          ],
+          "totalParticipants": "80.000"
+        },
+        "slider": {
+          "subtitle": "Nos prochains rendez-vous",
+          "title": "Évènements à venir",
+          "events": [
+            {
+              "type": "tournoi",
+              "title": "Tournoi Gaming House Tour",
+              "date": "29 décembre 2025",
+              "time": "14h-00h",
+              "cardThumbnail": "/assets/img/events/thumbnail/fifa-season_1.png",
+              "categories": ["fifaSeason"],
+              "games": ["fc26"],
+              "buttonText": "S'INSCRIRE",
+              "buttonLink": "/tournaments",
+              "color": "#10b981"
+            },
+            {
+              "type": "event",
+              "title": "Free Play Gaming House Tour",
+              "date": "28 décembre 2025",
+              "time": "14h-00h",
+              "cardThumbnail": "/assets/img/events/thumbnail/gaming-house-tour_1.png",
+              "categories": ["gamingHouseTour"],
+              "games": ["valorant"],
+              "buttonText": "S'INSCRIRE",
+              "buttonLink": "/tournaments",
+              "color": "#fe7810"
+            },
+            {
+              "type": "event",
+              "title": "Free Play Gaming House Tour",
+              "date": "28 décembre 2025",
+              "time": "14h-00h",
+              "cardThumbnail": "/assets/img/events/thumbnail/polar-lens_1.png",
+              "categories": ["polarLens"],
+              "games": ["tombraider", "amongus"],
+              "buttonText": "S'INSCRIRE",
+              "buttonLink": "/tournaments",
+              "color": "#dca010"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "statistics",
+      "data": {
+        "stats": [
+          {
+            "value": 104,
+            "plus": false,
+            "label": "ÉVÉNEMENTS",
+            "sublabel": "RÉALISÉS"
+          },
+          {
+            "value": 10300,
+            "plus": true,
+            "label": "Cash Prize et Cadeaux",
+            "sublabel": "offerts (en euros)"
+          },
+          {
+            "value": 80000,
+            "plus": true,
+            "label": "Joueurs/Visiteurs",
+            "sublabel": "acceuillis"
+          },
+          {
+            "value": 10100,
+            "plus": true,
+            "label": "Visites uniques sur",
+            "sublabel": "le site WEB"
+          },
+          {
+            "value": 10000,
+            "plus": false,
+            "label": "Pic de visiteurs",
+            "sublabel": "accueillis"
+          },
+          {
+            "value": 382000,
+            "plus": true,
+            "label": "Couverture RS",
+            "sublabel": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "simpleSection",
+      "data": {
+        "id": "tournaments-competitive",
+        "subtitle": "à propos de HGC",
+        "title": "Découvrez l'association",
+        "paragraphs": [
+          "Holiday Geek Cup est une association locale basée à Billy-Montigny (62) et qui a pour objectifs de rendre plus accessible l'accès aux jeux vidéos pour tous.",
+          "Notre coeur de métier est la réalisation d'événements gaming de proximité en partenariat avec les collectivités locales et des acteurs économiques du secteur."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/equipe-hgc-2026.webp",
+          "alt": "Tournois compétitifs HGC",
+          "position": "right"
+        },
+        "ctas": [
+          {
+            "text": "Voir HGC en détails",
+            "href": "/a-propos",
+            "variant": "primary",
+            "size": "lg"
+          },
+          {
+            "text": "Nous contacter",
+            "href": "/contact",
+            "variant": "secondary",
+            "size": "md"
+          }
+        ]
+      }
+    },
+    {
+      "type": "gallery",
+      "data": {
+        "title": "À quoi ressemblent nos événements ?",
+        "subtitle": "en images",
+        "images": [
+          {
+            "src": "/assets/img/placeholders/24.webp",
+            "alt": "Gallery Image 24"
+          },
+          {
+            "src": "/assets/img/placeholders/19.webp",
+            "alt": "Gallery Image 19"
+          },
+          {
+            "src": "/assets/img/placeholders/3.webp",
+            "alt": "Gallery Image 3"
+          },
+          {
+            "src": "/assets/img/placeholders/4.webp",
+            "alt": "Gallery Image 4"
+          },
+          {
+            "src": "/assets/img/placeholders/5.webp",
+            "alt": "Gallery Image 5"
+          },
+          {
+            "src": "/assets/img/placeholders/20.webp",
+            "alt": "Gallery Image 20"
+          },
+          {
+            "src": "/assets/img/placeholders/7.webp",
+            "alt": "Gallery Image 7"
+          },
+          {
+            "src": "/assets/img/placeholders/8.webp",
+            "alt": "Gallery Image 8"
+          },
+          {
+            "src": "/assets/img/placeholders/9.webp",
+            "alt": "Gallery Image 9"
+          },
+          {
+            "src": "/assets/img/placeholders/22.webp",
+            "alt": "Gallery Image 22"
+          },
+          {
+            "src": "/assets/img/placeholders/21.webp",
+            "alt": "Gallery Image 21"
+          },
+          {
+            "src": "/assets/img/placeholders/12.webp",
+            "alt": "Gallery Image 12"
+          },
+          {
+            "src": "/assets/img/placeholders/13.webp",
+            "alt": "Gallery Image 13"
+          },
+          {
+            "src": "/assets/img/placeholders/23.webp",
+            "alt": "Gallery Image 23"
+          },
+          {
+            "src": "/assets/img/placeholders/15.webp",
+            "alt": "Gallery Image 15"
+          },
+          {
+            "src": "/assets/img/placeholders/16.webp",
+            "alt": "Gallery Image 16"
+          },
+          {
+            "src": "/assets/img/placeholders/17.webp",
+            "alt": "Gallery Image 17"
+          },
+          {
+            "src": "/assets/img/placeholders/18.webp",
+            "alt": "Gallery Image 18"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "data": {
+        "title": "REJOIGNEZ LA PLUS GRANDE COMMUNAUTÉ GAMING LOCALE",
+        "subtitle": "COMMUNAUTÉ DISCORD",
+        "paragraph": "Plus de 62 000 joueurs nous font déjà confiance. Rejoignez une communauté passionnée, participez à des événements exclusifs et rencontrez des joueurs de votre région.",
+        "ctas": [
+          {
+            "text": "REJOINDRE Le discord",
+            "href": "https://discord.gg/YtkPm7PgQJ",
+            "variant": "secondary",
+            "size": "lg"
+          }
+        ]
+      },
+      "props": {
+        "glowMode": "centerBlinking",
+        "backgroundColor": "gray",
+        "speed": 60
+      }
+    },
+    {
+      "type": "testimony",
+      "data": {
+        "title": "Ce que disent nos joueurs",
+        "subtitle": "Témoignages",
+        "testimonials": [
+          {
+            "id": 1,
+            "quote": "Merci pour cette belle expérience j'ai fini 1er ❤️",
+            "author": "teikzo",
+            "role": "Vainqueur du Tournoi Grenay",
+            "avatar": ""
+          },
+          {
+            "id": 2,
+            "quote": "Le meilleur événement 🔥",
+            "author": "andydubled_",
+            "role": "Participant Fortnite Pathe series",
+            "avatar": ""
+          },
+          {
+            "id": 3,
+            "quote": "Très belle découverte de cette association … Félicitations à ces jeunes, ces rassemblements poussent nos jeunes à rencontrer d'autres passionnés et à sortir de l'isolement du jeu vidéo…",
+            "author": "Charlen",
+            "role": "Visiteurs tournoi Tournoi Isbergues",
+            "avatar": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "partners",
+      "data": {
+        "subtitle": "NOS PARTENAIRES",
+        "title": "ILS NOUS FONT CONFIANCE",
+        "logos": [
+          {
+            "alt": "ANCT",
+            "src": "/assets/logos/partners/logo-anct.svg"
+          },
+          {
+            "alt": "Departement 62",
+            "src": "/assets/logos/partners/logo-dept-62.svg"
+          },
+          {
+            "alt": "Dominos Pizza",
+            "src": "/assets/logos/partners/logo-dominos-pizza.svg"
+          },
+          {
+            "alt": "Erazer",
+            "src": "/assets/logos/partners/logo-erazer.svg"
+          },
+          {
+            "alt": "Ville de Lens",
+            "src": "/assets/logos/partners/logo-lens-ville.svg"
+          },
+          {
+            "alt": "Pathe",
+            "src": "/assets/logos/partners/logo-pathe.png"
+          },
+          {
+            "alt": "Prefet Pas de Calais",
+            "src": "/assets/logos/partners/logo-prefet-pas-de-calais.svg"
+          },
+          {
+            "alt": "Quartiers 2030",
+            "src": "/assets/logos/partners/logo-quartiers-2030.svg"
+          },
+          {
+            "alt": "Tadao",
+            "src": "/assets/logos/partners/LOGO_tadao.png"
+          },
+          {
+            "alt": "ESS France",
+            "src": "/assets/logos/partners/logo-ess.png"
+          },
+          {
+            "alt": "Agrément JEP",
+            "src": "/assets/logos/partners/logo-jep.png"
+          },
+          {
+            "alt": "La Voix du Nord",
+            "src": "/assets/logos/partners/logo-voix-du-nord.png"
+          }
+        ]
+      }
+    }
+  ]
+}

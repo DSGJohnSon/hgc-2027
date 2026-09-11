@@ -1,0 +1,97 @@
+// ============================================================
+// PIED DE PAGE
+//
+// Contenu figé, extrait du backoffice Payload (global « footer »)
+// le 2026-09-11, au moment où la gestion de
+// cette page a été retirée du CMS. Modifier directement ce fichier.
+// ============================================================
+
+import type { FooterData } from "@/types";
+
+export const footerData: FooterData = {
+  "logo": {
+    "src": "/assets/logos/logo-hgc.svg",
+    "alt": "HGC Logo"
+  },
+  "about": "Holiday Geek Cup est une structure associative qui a pour but d’organiser divers événements autour du jeux vidéo et de l’esport en général. ",
+  "socialLinks": [
+    {
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/HolidayGeekCup/",
+      "icon": "facebook"
+    },
+    {
+      "platform": "Twitter - X",
+      "url": "https://x.com/HolidayGeekCup",
+      "icon": "twitter"
+    },
+    {
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/holiday_geek_cup/",
+      "icon": "instagram"
+    },
+    {
+      "platform": "LinkedIn",
+      "url": "https://www.linkedin.com/company/holiday-geek-cup/",
+      "icon": "linkedin"
+    }
+  ],
+  "widgets": [
+    {
+      "title": "Pages",
+      "links": [
+        {
+          "label": "Accueil",
+          "href": "/"
+        },
+        {
+          "label": "À Propos de l'association",
+          "href": "/a-propos"
+        },
+        {
+          "label": "Événements",
+          "href": "/evenements"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      ]
+    },
+    {
+      "title": "Nos événements",
+      "links": [
+        {
+          "label": "FIFA Season",
+          "href": "/evenements?category=fifaSeason"
+        },
+        {
+          "label": "Gaming House Tour",
+          "href": "/evenements?category=gamingHouseTour"
+        },
+        {
+          "label": "Polar Lens",
+          "href": "/evenements?category=polarLens"
+        }
+      ]
+    },
+    {
+      "title": "Liens utiles",
+      "links": [
+        {
+          "label": "Mentions légales",
+          "href": "/mentions-legales"
+        },
+        {
+          "label": "Règlement des événements",
+          "href": "/reglement"
+        }
+      ]
+    }
+  ],
+  "newsletter": {
+    "title": "Restons connectés !",
+    "description": "Abonnez-vous à notre newsletter pour recevoir nos dernières mises à jour et nouvelles ! (Disponible bientôt)",
+    "placeholder": "Votre adresse email"
+  }
+};

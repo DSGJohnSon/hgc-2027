@@ -1,0 +1,946 @@
+:root {
+  // Couleur primaire (remplace le bleu Payload par le violet HGC)
+  --color-blue-650: #6240cf;
+  --color-blue-600: #6240cf;
+  --color-blue-500: #7b55e0;
+  --color-blue-400: #8b5cf6;
+  --color-blue-350: #9d74f7;
+  --color-blue-300: #b08ef9;
+
+  // Focus rings
+  --color-blue-250: rgba(98, 64, 207, 0.3);
+}
+
+// Thème sombre (défaut admin Payload)
+[data-theme='dark'] {
+  --theme-bg: #0a0a0a;
+  --theme-elevation-0: #0d0d0d;
+  --theme-elevation-50: #141414;
+  --theme-elevation-100: #1a1a1a;
+  --theme-elevation-150: #222222;
+  --theme-elevation-200: #2a2a2a;
+}
+
+// ============================================================
+// ÉCRANS D'AUTHENTIFICATION
+//
+// Payload rend ces écrans dans un gabarit commun, `template-minimal` :
+//   /login, /forgot, /reset/:token, /logout, /logout-inactivity,
+//   /unauthorized, /create-first-user, /:collection/verify/:token
+//
+//   section.template-minimal
+//     └── div.template-minimal__wrap        ← la carte
+//          └── (contenu propre à chaque vue)
+//
+// Ils partagent donc tous la carte en deux moitiés : contenu à gauche, visuel à
+// droite. Le visuel est un `::after` posé en CSS et non un élément du DOM, pour
+// deux raisons : seul le login dispose de points d'injection (`beforeLogin` /
+// `afterLogin`), et le contenu de ces vues est hétérogène — seul /logout affiche
+// un logo, /reset a sa propre structure. Un `::after` positionné en absolu ne
+// fait aucune hypothèse sur les enfants et fonctionne partout.
+//
+// Palette sombre, alignée sur l'identité du site : le logo HGC comporte 14 formes
+// en blanc pur sur 77, invisibles sur fond clair. Les couleurs sont écrites en
+// dur plutôt que déduites des variables de thème Payload — ces écrans gardent le
+// même rendu quel que soit le thème choisi pour le reste de l'admin.
+// ============================================================
+
+$hgc-auth-radius: 14px;
+$hgc-auth-gutter: 48px;
+$hgc-auth-breakpoint: 900px;
+
+// Palette
+$hgc-auth-page: #0a0a0a; // fond de page
+$hgc-auth-panel: #131320; // panneau de gauche
+$hgc-auth-border: rgba(255, 255, 255, 0.08);
+$hgc-auth-rule: rgba(255, 255, 255, 0.1);
+$hgc-auth-text: #ffffff;
+$hgc-auth-muted: rgba(255, 255, 255, 0.6);
+$hgc-auth-field-bg: rgba(255, 255, 255, 0.04);
+$hgc-auth-field-border: rgba(255, 255, 255, 0.14);
+
+.template-minimal {
+  background-color: $hgc-auth-page;
+  color: $hgc-auth-text;
+  padding: 60px 24px;
+
+  // Spécificité (0,3,0) : l'emporte sans ambiguïté sur la règle Payload
+  // `.template-minimal--width-normal .template-minimal__wrap` (0,2,0).
+  &.template-minimal--width-normal .template-minimal__wrap {
+    max-width: 940px;
+    min-height: 520px;
+    position: relative;
+    background-color: $hgc-auth-panel;
+    border: 1px solid $hgc-auth-border;
+    border-radius: $hgc-auth-radius;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    // Pas de `overflow: hidden` : la mention de pied est placée sous la carte.
+
+    // Grille de deux colonnes égales. On passe par une grille et non par un
+    // `padding-right: 50%` : un pourcentage de padding se résout contre la
+    // largeur du **bloc conteneur**, ici la section pleine largeur, et non
+    // contre la carte — le calcul serait faux et écraserait la colonne de
+    // gauche. Les pistes d'une grille, elles, se résolvent bien contre le
+    // conteneur de grille.
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: center;
+    // Padding vertical seulement : l'horizontal est porté par les enfants,
+    // afin que la colonne de gauche s'aligne exactement sur le visuel.
+    padding: $hgc-auth-gutter 0;
+
+    // Le contenu de la vue — quel qu'il soit — occupe la colonne de gauche.
+    // La moitié droite est couverte par le visuel, hors flux.
+    > * {
+      grid-column: 1;
+      padding-left: $hgc-auth-gutter;
+      padding-right: $hgc-auth-gutter;
+      min-width: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 50%;
+      background-image: url('/assets/img/placeholders/22.webp');
+      background-size: cover;
+      background-position: center;
+      border-radius: 0 $hgc-auth-radius $hgc-auth-radius 0;
+    }
+  }
+
+  // Logo — affiché par /login et /logout.
+  .login__brand {
+    margin-bottom: 0;
+
+    img {
+      height: 52px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  // Textes génériques des vues sans point d'injection (/forgot, /logout…).
+  h1,
+  h2 {
+    color: $hgc-auth-text;
+  }
+
+  p {
+    color: $hgc-auth-muted;
+  }
+
+  // -------------------------------------------------------------- formulaires
+
+  .field-label,
+  .field-type label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $hgc-auth-text;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='password'] {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    background-color: $hgc-auth-field-bg;
+    border: 1px solid $hgc-auth-field-border;
+    border-radius: 9px;
+    color: $hgc-auth-text;
+    font-size: 0.95rem;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    &:focus {
+      border-color: var(--color-blue-400);
+      box-shadow: 0 0 0 3px var(--color-blue-250);
+      outline: none;
+    }
+  }
+
+  .form-submit {
+    margin-top: 24px;
+
+    .btn {
+      width: 100%;
+      margin: 0;
+    }
+
+    .btn__content {
+      justify-content: center;
+    }
+
+    .btn--style-primary {
+      background-color: var(--color-blue-600);
+      border-color: var(--color-blue-600);
+      border-radius: 9px;
+      min-height: 48px;
+
+      .btn__content {
+        color: #ffffff;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: var(--color-blue-500);
+        border-color: var(--color-blue-500);
+      }
+    }
+  }
+}
+
+// ------------------------------------------------------- spécifique au login
+
+.login.template-minimal {
+  .hgc-login__intro {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .hgc-login__title {
+    margin: 0 0 12px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $hgc-auth-text;
+  }
+
+  .hgc-login__subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: $hgc-auth-muted;
+  }
+
+  .login__form {
+    position: relative;
+    margin-top: 28px;
+
+    // Trait de séparation entre l'accroche et les champs.
+    &::before {
+      content: '';
+      display: block;
+      height: 1px;
+      background-color: $hgc-auth-rule;
+      margin-bottom: 28px;
+    }
+
+    // Lien « Mot de passe oublié ? » : frère du bloc de champs, aligné à droite.
+    > a {
+      display: block;
+      margin-top: 14px;
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: $hgc-auth-muted;
+      text-decoration: none;
+
+      &:hover {
+        color: $hgc-auth-text;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .hgc-login__notice {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    // Hors flux : le padding hérité des enfants de la grille ne s'applique pas.
+    padding: 0;
+    margin: 22px 0 0;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.45);
+
+    a {
+      color: rgba(255, 255, 255, 0.75);
+      text-decoration: underline;
+
+      &:hover {
+        color: $hgc-auth-text;
+      }
+    }
+  }
+}
+
+// ------------------------------------------------------------------- mobile
+
+@media (max-width: $hgc-auth-breakpoint) {
+  .template-minimal.template-minimal--width-normal .template-minimal__wrap {
+    max-width: 460px;
+    min-height: 0;
+    grid-template-columns: 1fr;
+    padding: 36px 0;
+
+    > * {
+      padding-left: 28px;
+      padding-right: 28px;
+    }
+
+    // Le visuel n'apporte rien sur petit écran et mangerait toute la hauteur.
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// ============================================================
+// TABLEAU DE BORD ET PAGE ÉVÉNEMENTS
+//
+// Contrairement aux écrans d'authentification, ces vues s'appuient sur les
+// variables de thème de Payload (`--theme-elevation-*`) : elles suivent donc le
+// sélecteur clair / sombre de l'admin, et rendent comme la maquette en clair.
+// ============================================================
+
+$hgc-dash-radius: 10px;
+
+.hgc-dash,
+.hgc-hub {
+  padding: 0 var(--gutter-h, 2rem) 4rem;
+  color: var(--theme-elevation-1000);
+}
+
+// ------------------------------------------------------------------ en-tête
+
+.hgc-dash__header {
+  margin-bottom: 2.5rem;
+}
+
+.hgc-dash__title {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.hgc-dash__subtitle {
+  margin: 0;
+  color: var(--theme-elevation-600);
+}
+
+// -------------------------------------------------------------------- cards
+
+// Grille de cards, partagée par la première rangée et la section
+// « Contenus partagés ». `auto-fill` conserve les pistes vides : les cards
+// gardent ainsi la même taille d'une rangée à l'autre.
+.hgc-dash__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+// Marge uniquement sur la rangée de tête ; à l'intérieur d'une section, c'est
+// `.hgc-dash__section` qui porte l'espacement.
+.hgc-dash > .hgc-dash__cards {
+  margin-bottom: 3rem;
+}
+
+// Deux sections de raccourcis côte à côte.
+.hgc-dash__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.hgc-dash__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: $hgc-dash-radius;
+}
+
+.hgc-dash__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.hgc-dash__card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.hgc-dash__pill {
+  flex-shrink: 0;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--theme-elevation-800);
+  background-color: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--theme-elevation-1000);
+    border-color: var(--color-blue-600);
+  }
+}
+
+.hgc-dash__card-media {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: var(--theme-elevation-100);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.hgc-dash__card-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// ---------------------------------------------------------------- sections
+
+.hgc-dash__section {
+  margin-bottom: 2.5rem;
+}
+
+.hgc-dash__section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  // Filet d'accent violet, repris de la maquette.
+  &::before {
+    content: '';
+    width: 3px;
+    height: 1.1em;
+    background-color: var(--color-blue-600);
+    border-radius: 2px;
+  }
+}
+
+.hgc-dash__shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hgc-dash__shortcut {
+  padding: 0.7rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--theme-elevation-1000);
+  background-color: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 8px;
+  text-decoration: none;
+
+  &:hover {
+    border-color: var(--color-blue-600);
+    background-color: var(--theme-elevation-50);
+  }
+}
+
+// Reste affiché, mais non cliquable — pages pas encore prêtes à être éditées.
+.hgc-dash__shortcut--disabled {
+  display: inline-block;
+  color: var(--theme-elevation-400);
+  cursor: not-allowed;
+  pointer-events: none;
+
+  &:hover {
+    border-color: var(--theme-elevation-150);
+    background-color: var(--theme-elevation-0);
+  }
+}
+
+// ---------------------------------------------------- navigation latérale
+//
+// Mêmes globals que les raccourcis désactivés ci-dessus (Pages du site web /
+// Mise en page du site) : leur entrée de menu reste visible mais non
+// cliquable. Ciblées par le seul identifiant stable que Payload leur donne
+// (`@payloadcms/next/dist/elements/Nav/index.client.js`) — pas de classe
+// dédiée par entité, donc pas d'autre accroche possible.
+#nav-global-home-page,
+#nav-global-about,
+#nav-global-contact,
+#nav-global-documents,
+#nav-global-header,
+#nav-global-footer {
+  color: var(--theme-elevation-400);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// ---------------------------------------------------------- bloc admin
+
+.hgc-dash__admin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  background-color: var(--theme-elevation-50);
+  border-radius: $hgc-dash-radius;
+}
+
+.hgc-dash__admin-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.hgc-dash__admin-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--theme-elevation-600);
+}
+
+.hgc-dash__admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+// ------------------------------------------------------- page Événements
+
+.hgc-hub__back {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--theme-elevation-1000);
+  }
+}
+
+.hgc-hub__heading {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.hgc-hub__intro {
+  margin: 0 0 2.5rem;
+  max-width: 60ch;
+  color: var(--theme-elevation-600);
+}
+
+.hgc-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.hgc-hub__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  background-color: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: $hgc-dash-radius;
+  text-decoration: none;
+  color: var(--theme-elevation-1000);
+
+  &:hover {
+    border-color: var(--color-blue-600);
+  }
+}
+
+.hgc-hub__count {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-blue-600);
+}
+
+.hgc-hub__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.hgc-hub__description {
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+}
+
+// ------------------------------------------------------------------ écrans
+
+// `.hgc-dash__cards` n'a pas de surcharge ici : `auto-fill` adapte déjà le
+// nombre de colonnes à la largeur disponible.
+@media (max-width: 1100px) {
+  .hgc-hub__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .hgc-dash__columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .hgc-hub__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hgc-dash__admin {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+// ============================================================
+// APERÇU JEU (formulaire d'édition)
+// components/admin/fields/GamePreviewField.tsx
+// ============================================================
+
+.hgc-game-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.hgc-game-preview__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hgc-game-preview__label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--theme-elevation-600);
+}
+
+.hgc-game-preview__frame-wrap {
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  background-color: var(--theme-elevation-100);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 10px;
+}
+
+// Contenu d'actualité : texte de longueur variable, pas une vignette. Hauteur
+// fixe généreuse avec défilement interne plutôt qu'un ratio figé.
+.hgc-game-preview__frame-wrap--tall {
+  aspect-ratio: auto;
+  height: 520px;
+}
+
+.hgc-game-preview__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.hgc-game-preview__error {
+  margin: 0;
+  padding: 0.75rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--theme-error-600, #a51c1c);
+  background-color: var(--theme-error-100, rgba(165, 28, 28, 0.08));
+  border: 1px solid var(--theme-error-600, #a51c1c);
+  border-radius: 8px;
+}
+
+// ============================================================
+// CHAMP COULEUR
+// components/admin/fields/ColorField.tsx — swatch natif accolé au texte.
+// ============================================================
+
+.hgc-color-swatch {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  cursor: pointer;
+  appearance: none;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 3px;
+  }
+
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+  }
+
+  &::-moz-color-swatch {
+    border: none;
+    border-radius: 4px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+// `.field-type__wrap` de TextInput rend, dans l'ordre : l'erreur, l'input,
+// `AfterInput` (le sélecteur), puis la description. Une grille à deux colonnes
+// met l'input et le sélecteur côte à côte sans toucher au reste — erreur et
+// description gardent leur pleine largeur.
+.field-type.text:has(.hgc-color-swatch) .field-type__wrap {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5rem 0.6rem;
+
+  .field-error,
+  .field-description {
+    grid-column: 1 / -1;
+  }
+}
+
+// ============================================================
+// LISTES EN CARDS (événements, partenaires)
+// Coque commune : components/admin/views/list/CardListView.tsx
+// ============================================================
+
+.hgc-cards {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.hgc-cards--events {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.hgc-cards--partners {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.hgc-cards--games {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.hgc-cards--actualites {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.hgc-cards__item {
+  list-style: none;
+}
+
+.hgc-cards__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 10px;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-blue-600);
+  }
+}
+
+// Case de sélection multiple, posée sur le visuel.
+.hgc-cards__select {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 1;
+  padding: 0.15rem;
+  background-color: var(--theme-elevation-0);
+  border-radius: 5px;
+}
+
+.hgc-cards__media {
+  display: block;
+  aspect-ratio: 16 / 9;
+  background-color: var(--theme-elevation-100);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.hgc-cards__media-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.8rem;
+  color: var(--theme-elevation-500);
+}
+
+// Les logos de partenaires ne sont pas recadrés : un logo tronqué est
+// inexploitable. Fond sombre imposé, la plupart étant dessinés pour ce contexte.
+.hgc-cards--partners .hgc-cards__media {
+  aspect-ratio: 4 / 3;
+  background-color: #030712;
+
+  img {
+    object-fit: contain;
+    padding: 1.25rem;
+  }
+}
+
+.hgc-cards--partners .hgc-cards__media-empty {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+// Cards jeux — aperçu du vrai composant `GameCard` du site, chargé via
+// `<iframe>` sur une page dédiée (voir components/admin/views/GamesListView.tsx
+// et app/(embed)/game-card/[slug]). L'admin n'a pas accès au Tailwind du site,
+// d'où ce rendu isolé plutôt qu'une reconstitution en CSS pur.
+.hgc-cards--games .hgc-cards__media {
+  aspect-ratio: 2 / 1;
+}
+
+.hgc-game-card__media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--theme-elevation-100);
+}
+
+.hgc-game-card__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  // Le clic passe par le lien qui recouvre la card (`.hgc-game-card__overlay-link`).
+  pointer-events: none;
+}
+
+.hgc-game-card__overlay-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hgc-cards__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem 1.1rem;
+}
+
+.hgc-cards__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+
+  a {
+    color: var(--theme-elevation-1000);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.hgc-cards__meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-700);
+}
+
+.hgc-cards__action {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--color-blue-600);
+  border-radius: 6px;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--color-blue-500);
+  }
+}
+
+.hgc-cards__meta--muted {
+  color: var(--theme-elevation-500);
+}
+
+// Pastille de statut : annulé prime sur brouillon.
+.hgc-cards__status {
+  align-self: flex-start;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+}
+
+.hgc-cards__status--published {
+  color: var(--theme-success-600, #17753b);
+  background-color: var(--theme-success-100, rgba(23, 117, 59, 0.12));
+}
+
+.hgc-cards__status--draft {
+  color: var(--theme-elevation-700);
+  background-color: var(--theme-elevation-100);
+}
+
+.hgc-cards__status--cancelled {
+  color: var(--theme-error-600, #a51c1c);
+  background-color: var(--theme-error-100, rgba(165, 28, 28, 0.12));
+}
+
+.hgc-cards__empty {
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--theme-elevation-600);
+
+  h3 {
+    margin: 0 0 0.5rem;
+    color: var(--theme-elevation-1000);
+  }
+
+  p {
+    margin: 0;
+  }
+}

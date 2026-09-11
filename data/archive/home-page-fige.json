@@ -1,0 +1,298 @@
+{
+  "sections": [
+    {
+      "type": "hero",
+      "data": {
+        "mainHero": {
+          "subtitle": "# La compétition E-Sport de proximité #",
+          "title": {
+            "line1": "L'évènement gaming qui",
+            "line2": "débarque chez toi"
+          },
+          "buttons": [
+            {
+              "label": "évènements à venir",
+              "href": "/evenements",
+              "variant": "primary",
+              "textUpperCase": true
+            },
+            {
+              "label": "découvrir hgc",
+              "href": "/a-propos",
+              "variant": "secondary",
+              "textUpperCase": true
+            }
+          ],
+          "totalParticipants": "80.000"
+        },
+        "slider": {
+          "subtitle": "Nos prochains rendez-vous",
+          "title": "Évènements à venir",
+          "events": []
+        }
+      }
+    },
+    {
+      "type": "statistics",
+      "data": {
+        "stats": [
+          {
+            "type": "number",
+            "value": 104,
+            "plus": false,
+            "label": "ÉVÉNEMENTS",
+            "sublabel": "RÉALISÉS"
+          },
+          {
+            "type": "number",
+            "value": 10300,
+            "plus": true,
+            "label": "Cash Prize et Cadeaux",
+            "sublabel": "offerts (en euros)"
+          },
+          {
+            "type": "number",
+            "value": 80000,
+            "plus": true,
+            "label": "Joueurs/Visiteurs",
+            "sublabel": "acceuillis"
+          },
+          {
+            "type": "number",
+            "value": 10100,
+            "plus": true,
+            "label": "Visites uniques sur",
+            "sublabel": "le site WEB"
+          },
+          {
+            "type": "number",
+            "value": 10000,
+            "plus": false,
+            "label": "Pic de visiteurs",
+            "sublabel": "accueillis"
+          },
+          {
+            "type": "number",
+            "value": 382000,
+            "plus": true,
+            "label": "Couverture RS",
+            "sublabel": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "simpleSection",
+      "data": {
+        "id": "tournaments-competitive",
+        "subtitle": "à propos de HGC",
+        "title": "Découvrez l'association",
+        "paragraphs": [
+          "Holiday Geek Cup est une association locale basée à Billy-Montigny (62) et qui a pour objectifs de rendre plus accessible l'accès aux jeux vidéos pour tous.",
+          "Notre coeur de métier est la réalisation d'événements gaming de proximité en partenariat avec les collectivités locales et des acteurs économiques du secteur."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/equipe-hgc-2026.webp",
+          "alt": "Tournois compétitifs HGC",
+          "position": "right"
+        },
+        "ctas": [
+          {
+            "text": "Voir HGC en détails",
+            "href": "/a-propos",
+            "variant": "primary",
+            "size": "lg"
+          },
+          {
+            "text": "Nous contacter",
+            "href": "/contact",
+            "variant": "secondary",
+            "size": "md"
+          }
+        ]
+      }
+    },
+    {
+      "type": "gallery",
+      "data": {
+        "title": "À quoi ressemblent nos événements ?",
+        "subtitle": "en images",
+        "images": [
+          {
+            "src": "/assets/img/placeholders/24.webp",
+            "alt": "Gallery Image 24"
+          },
+          {
+            "src": "/assets/img/placeholders/19.webp",
+            "alt": "Gallery Image 19"
+          },
+          {
+            "src": "/assets/img/placeholders/3.webp",
+            "alt": "Gallery Image 3"
+          },
+          {
+            "src": "/assets/img/placeholders/4.webp",
+            "alt": "Gallery Image 4"
+          },
+          {
+            "src": "/assets/img/placeholders/5.webp",
+            "alt": "Gallery Image 5"
+          },
+          {
+            "src": "/assets/img/placeholders/20.webp",
+            "alt": "Gallery Image 20"
+          },
+          {
+            "src": "/assets/img/placeholders/7.webp",
+            "alt": "Gallery Image 7"
+          },
+          {
+            "src": "/assets/img/placeholders/8.webp",
+            "alt": "Gallery Image 8"
+          },
+          {
+            "src": "/assets/img/placeholders/9.webp",
+            "alt": "Gallery Image 9"
+          },
+          {
+            "src": "/assets/img/placeholders/22.webp",
+            "alt": "Gallery Image 22"
+          },
+          {
+            "src": "/assets/img/placeholders/21.webp",
+            "alt": "Gallery Image 21"
+          },
+          {
+            "src": "/assets/img/placeholders/12.webp",
+            "alt": "Gallery Image 12"
+          },
+          {
+            "src": "/assets/img/placeholders/13.webp",
+            "alt": "Gallery Image 13"
+          },
+          {
+            "src": "/assets/img/placeholders/23.webp",
+            "alt": "Gallery Image 23"
+          },
+          {
+            "src": "/assets/img/placeholders/15.webp",
+            "alt": "Gallery Image 15"
+          },
+          {
+            "src": "/assets/img/placeholders/16.webp",
+            "alt": "Gallery Image 16"
+          },
+          {
+            "src": "/assets/img/placeholders/17.webp",
+            "alt": "Gallery Image 17"
+          },
+          {
+            "src": "/assets/img/placeholders/18.webp",
+            "alt": "Gallery Image 18"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "data": {
+        "subtitle": "COMMUNAUTÉ DISCORD",
+        "title": "REJOIGNEZ LA PLUS GRANDE COMMUNAUTÉ GAMING LOCALE",
+        "paragraph": "Plus de 62 000 joueurs nous font déjà confiance. Rejoignez une communauté passionnée, participez à des événements exclusifs et rencontrez des joueurs de votre région.",
+        "ctas": [
+          {
+            "text": "REJOINDRE Le discord",
+            "href": "https://discord.gg/YtkPm7PgQJ",
+            "variant": "secondary",
+            "size": "lg"
+          }
+        ]
+      },
+      "props": {
+        "glowMode": "centerBlinking",
+        "backgroundColor": "gray",
+        "speed": 60
+      }
+    },
+    {
+      "type": "testimony",
+      "data": {
+        "subtitle": "Témoignages",
+        "title": "Ce que disent nos joueurs",
+        "testimonials": [
+          {
+            "id": 1,
+            "quote": "Merci pour cette belle expérience j'ai fini 1er ❤️",
+            "author": "teikzo",
+            "role": "Vainqueur du Tournoi Grenay",
+            "avatar": ""
+          },
+          {
+            "id": 2,
+            "quote": "Le meilleur événement 🔥",
+            "author": "andydubled_",
+            "role": "Participant Fortnite Pathe series",
+            "avatar": ""
+          },
+          {
+            "id": 3,
+            "quote": "Très belle découverte de cette association … Félicitations à ces jeunes, ces rassemblements poussent nos jeunes à rencontrer d'autres passionnés et à sortir de l'isolement du jeu vidéo…",
+            "author": "Charlen",
+            "role": "Visiteurs tournoi Tournoi Isbergues",
+            "avatar": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "partners",
+      "data": {
+        "subtitle": "NOS PARTENAIRES",
+        "title": "ILS NOUS FONT CONFIANCE",
+        "logos": [
+          {
+            "alt": "ANCT (Agence Nationale de la Cohésion des Territoires)",
+            "src": "http://localhost:3000/api/media/file/logo_anct-1.png"
+          },
+          {
+            "alt": "Département du Pas de Calais (62)",
+            "src": "http://localhost:3000/api/media/file/logo_pas-de-calais-1.png"
+          },
+          {
+            "alt": "Erazer",
+            "src": "http://localhost:3000/api/media/file/logo_erazer-1.png"
+          },
+          {
+            "alt": "Ville de Lens",
+            "src": "http://localhost:3000/api/media/file/logo_ville-lens-1.png"
+          },
+          {
+            "alt": "Pathé",
+            "src": "http://localhost:3000/api/media/file/logo_pathe-1.png"
+          },
+          {
+            "alt": "Préfecture du Pas de Calais",
+            "src": "http://localhost:3000/api/media/file/logo_prefecture-pas-de-calais-1.png"
+          },
+          {
+            "alt": "TADAO 100% Gratuit",
+            "src": "http://localhost:3000/api/media/file/logo_tadao-100-gratuit-1.png"
+          },
+          {
+            "alt": "ESS France (Économie Sociale et Solidaire)",
+            "src": "http://localhost:3000/api/media/file/logo_ess-france-1.png"
+          },
+          {
+            "alt": "Agrément JEP (Jeunesse d'Éducation Populaire)",
+            "src": "http://localhost:3000/api/media/file/logo_agrement-jep-1.png"
+          },
+          {
+            "alt": "La Voix du Nord",
+            "src": "http://localhost:3000/api/media/file/logo_voix-du-nord-1.png"
+          }
+        ]
+      }
+    }
+  ],
+  "seo": {}
+}

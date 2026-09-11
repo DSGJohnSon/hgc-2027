@@ -1,0 +1,361 @@
+{
+  "games": [
+    {
+      "id": "just_dance",
+      "name": "Just Dance",
+      "blockType": "block",
+      "bgType": "gradient",
+      "color1": "#FDED31",
+      "color2": "#43e2e7",
+      "logo": "/assets/img/games/just_dance_logo.png",
+      "img": "/assets/img/games/just_dance_characters.png",
+      "bgImg": "/assets/img/games/just_dance_game.png"
+    },
+    {
+      "id": "fortnite",
+      "name": "Fortnite",
+      "blockType": "block",
+      "bgType": "gradient",
+      "color1": "#007cbe",
+      "color2": "#43e2e7",
+      "logo": "/assets/img/games/fortnite_logo.png",
+      "img": "/assets/img/games/fortnite_characters.png",
+      "bgImg": "/assets/img/games/fortnite_game.png"
+    },
+    {
+      "id": "luigi_mansion_3",
+      "name": "Luigi’s Mansion 3",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#000000",
+      "color2": "",
+      "logo": "/assets/img/games/luigis_mansion_3_logo.png",
+      "img": "/assets/img/games/luigis_mansion_3_characters.png",
+      "bgImg": "/assets/img/games/luigis_mansion_3_game.png"
+    },
+    {
+      "id": "new_super_mario_bros",
+      "name": "(New) Super Mario Bros",
+      "blockType": "text"
+    },
+    {
+      "id": "new_super_mario_bros_2",
+      "name": "(New) Super Mario Bros 2",
+      "blockType": "text"
+    },
+    {
+      "id": "new_super_mario_bros_u_deluxe",
+      "name": "(New) Super Mario Bros U - Deluxe",
+      "blockType": "text"
+    },
+    {
+      "id": "super_mario_maker_2",
+      "name": "Super Mario Maker 2",
+      "blockType": "text"
+    },
+    {
+      "id": "mario_kart_wii",
+      "name": "Mario Kart Wii",
+      "blockType": "text"
+    },
+    {
+      "id": "mariokart_live",
+      "name": "Mario Kart Live - Home Circuit",
+      "blockType": "text"
+    },
+    {
+      "id": "super_mario_odyssey",
+      "name": "Super Mario Odyssey",
+      "blockType": "text"
+    },
+    {
+      "id": "super_mario_galaxy_1",
+      "name": "Super Mario Galaxy",
+      "blockType": "text"
+    },
+    {
+      "id": "super_mario_galaxy_2",
+      "name": "Super Mario Galaxy 2",
+      "blockType": "block",
+      "bgType": "gradient",
+      "color1": "#F2150A",
+      "color2": "#185ECA",
+      "logo": "/assets/img/games/super_mario_galaxy_2_logo.png",
+      "img": "/assets/img/games/super_mario_galaxy_2_characters.png",
+      "bgImg": "/assets/img/games/super_mario_galaxy_2_game.png"
+    },
+    {
+      "id": "detective_pikachu_returns",
+      "name": "Detective Pikachu Returns",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#E0C023",
+      "color2": "",
+      "logo": "/assets/img/games/detective_pikachu_logo.png",
+      "img": "/assets/img/games/detective_pikachu_characters.png",
+      "bgImg": "/assets/img/games/detective_pikachu_game.png"
+    },
+    {
+      "id": "firewatch",
+      "name": "Firewatch",
+      "blockType": "block",
+      "bgType": "gradient",
+      "color1": "#CB2D3E",
+      "color2": "#ff6c40",
+      "logo": "/assets/img/games/firewatch_logo.png",
+      "bgImg": "/assets/img/games/firewatch_game.png"
+    },
+    {
+      "id": "riven",
+      "name": "Riven",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#0e0e0e",
+      "color2": "",
+      "logo": "/assets/img/games/riven_logo.png",
+      "bgImg": "/assets/img/games/riven_game.png"
+    },
+    {
+      "id": "the_secret_of_monkey_island",
+      "name": "The Secret of Monkey Island",
+      "blockType": "block",
+      "bgType": "gradient",
+      "color1": "#F27119",
+      "color2": "#0D1336",
+      "logo": "/assets/img/games/the_secret_of_monkey_island_logo.png",
+      "img": "/assets/img/games/the_secret_of_monkey_island_characters.png",
+      "bgImg": "/assets/img/games/the_secret_of_monkey_island_game.png"
+    },
+    {
+      "id": "la_noire",
+      "name": "L.A. Noire",
+      "blockType": "block",
+      "bgType": "gradient",
+      "color1": "#FC9507",
+      "color2": "#000000",
+      "logo": "/assets/img/games/la_noire_logo.png",
+      "img": "/assets/img/games/la_noire_characters.png",
+      "bgImg": "/assets/img/games/la_noire_game.png"
+    },
+    {
+      "id": "heavy_rain",
+      "name": "Heavy Rain",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#000000",
+      "color2": "",
+      "logo": "/assets/img/games/heavy_rain_logo.png",
+      "img": "/assets/img/games/heavy_rain_characters.png",
+      "bgImg": "/assets/img/games/heavy_rain_game.png"
+    },
+    {
+      "id": "the_vanishing_of_ethan_carter",
+      "name": "The Vanishing of Ethan Carter",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#ffffff",
+      "color2": "",
+      "logo": "/assets/img/games/vanishing_of_ethan_carter_logo.png",
+      "img": "/assets/img/games/vanishing_of_ethan_carter_characters.png",
+      "bgImg": "/assets/img/games/vanishing_of_ethan_carter_game.png"
+    },
+    {
+      "id": "agatha_christie_2",
+      "name": "Agatha Christie - Le Crime de l'Orient-Express",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#9A824A",
+      "color2": "",
+      "logo": "/assets/img/games/agatha_christie_crime_orient_express_logo.png",
+      "bgImg": "/assets/img/games/agatha_christie_crime_orient_express_game.png",
+      "img": "/assets/img/games/agatha_christie_crime_orient_express_characters.png"
+    },
+    {
+      "id": "oxenfree_2",
+      "name": "Oxenfree 2",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#124C4A",
+      "color2": "",
+      "logo": "/assets/img/games/oxenfree_2_logo.png",
+      "img": "/assets/img/games/oxenfree_2_characters.png",
+      "bgImg": "/assets/img/games/oxenfree_2_game.png"
+    },
+    {
+      "id": "syberia",
+      "name": "Syberia 1 & 2",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#f3f3f3",
+      "color2": "",
+      "logo": "/assets/img/games/syberia_logo.png",
+      "img": "/assets/img/games/syberia_characters.png",
+      "bgImg": "/assets/img/games/syberia_game.png"
+    },
+    {
+      "id": "life_is_strange_2",
+      "name": "Life is Strange 2",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "transparent",
+      "color2": "",
+      "logo": "/assets/img/games/life_is_strange_2_logo.png",
+      "img": "/assets/img/games/life_is_strange_2_characters.png",
+      "bgImg": "/assets/img/games/life_is_strange_2_game.png"
+    },
+    {
+      "id": "twin_mirror",
+      "name": "Twin Mirror",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#00000010",
+      "color2": "",
+      "logo": "/assets/img/games/twin_mirror_logo.png",
+      "img": "/assets/img/games/twin_mirror_characters.png",
+      "bgImg": "/assets/img/games/twin_mirror_game.png"
+    },
+    {
+      "id": "secret_neighbor",
+      "name": "Secret Neighbor",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/secret_neightbor_logo.png",
+      "img": "/assets/img/games/secret_neightbor_characters.png",
+      "bgImg": "/assets/img/games/secret_neightbor_game.png"
+    },
+    {
+      "id": "clair_obscur_expedition_33",
+      "name": "Clair Obscur: Expedition 33",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/clair_obscur_logo.png",
+      "img": "/assets/img/games/clair_obscur_characters.png",
+      "bgImg": "/assets/img/games/clair_obscur_game.png"
+    },
+    {
+      "id": "sherlock_holmes_crimes_punishments",
+      "name": "Sherlock Holmes: Crimes & Punishments",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/sherlock_holmes_crimes_punishments_logo.png",
+      "img": "/assets/img/games/sherlock_holmes_crimes_punishments_characters.png",
+      "bgImg": "/assets/img/games/sherlock_holmes_crimes_punishments_game.png"
+    },
+    {
+      "id": "nintendo_switch_sports",
+      "name": "Nintendo Switch Sports",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#ffffff",
+      "color2": "",
+      "logo": "/assets/img/games/nintendo_switch_sports_logo.png",
+      "img": "/assets/img/games/nintendo_switch_sports_characters.png",
+      "bgImg": "/assets/img/games/nintendo_switch_sports_game.png"
+    },
+    {
+      "id": "valorant",
+      "name": "Valorant",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#FF4655",
+      "color2": "",
+      "logo": "/assets/img/games/valorant_logo.png",
+      "img": "/assets/img/games/valorant_characters.png",
+      "bgImg": "/assets/img/games/valorant_game.webp"
+    },
+    {
+      "id": "fc25",
+      "name": "FC 25",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/fc25_logo.png",
+      "img": "/assets/img/games/fc25_characters.png",
+      "bgImg": "/assets/img/games/fc25_game.png"
+    },
+    {
+      "id": "fc26",
+      "name": "FC 26",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/fc26_logo.png",
+      "img": "/assets/img/games/fc26_characters.png",
+      "bgImg": "/assets/img/games/fc26_game.png"
+    },
+    {
+      "id": "mariokart8",
+      "name": "Mario Kart 8",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/mk8_logo.png",
+      "img": "/assets/img/games/mk8_characters.png",
+      "bgImg": "/assets/img/games/mk8_game.png"
+    },
+    {
+      "id": "mariokart_world",
+      "name": "Mario Kart World",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/mk_world_logo.png",
+      "img": "/assets/img/games/mk_world_characters.png",
+      "bgImg": "/assets/img/games/mk_world_game.png"
+    },
+    {
+      "id": "tombraider",
+      "name": "Tomb Raider",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "#ffffff",
+      "color2": "",
+      "logo": "/assets/img/games/tomb_raider_logo.png",
+      "img": "/assets/img/games/tomb_raider_characters.png",
+      "bgImg": "/assets/img/games/tomb_raider_game.png"
+    },
+    {
+      "id": "amongus",
+      "name": "Among Us",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/among_us_logo.png",
+      "img": "/assets/img/games/among_us_characters.png",
+      "bgImg": "/assets/img/games/among_us_game.png"
+    },
+    {
+      "id": "rocket_league",
+      "name": "Rocket League",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/rocket_league_logo.png",
+      "img": "/assets/img/games/rocket_league_characters.png",
+      "bgImg": "/assets/img/games/rocket_league_game.png"
+    },
+    {
+      "id": "fall_guys",
+      "name": "Fall Guys",
+      "blockType": "block",
+      "bgType": "color",
+      "color1": "",
+      "color2": "",
+      "logo": "/assets/img/games/fall_guys_logo.png",
+      "img": "/assets/img/games/fall_guys_characters.png",
+      "bgImg": "/assets/img/games/fall_guys_game.png"
+    }
+  ]
+}

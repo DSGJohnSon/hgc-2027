@@ -1,0 +1,297 @@
+{
+  "sections": [
+    {
+      "type": "hero",
+      "data": {
+        "mainHero": {
+          "subtitle": "# TOURNOI E-SPORT OFFICIEL #",
+          "title": {
+            "line1": "Tournoi Mario Kart World",
+            "line2": "& Fortnite 2025"
+          },
+          "buttons": [
+            {
+              "label": "S'INSCRIRE MAINTENANT",
+              "href": "/inscription",
+              "variant": "primary",
+              "textUpperCase": true
+            },
+            {
+              "label": "TÉLÉCHARGER LE RÈGLEMENT",
+              "href": "/reglement.pdf",
+              "variant": "secondary",
+              "textUpperCase": true
+            }
+          ],
+          "totalParticipants": "128"
+        },
+        "slider": {
+          "subtitle": "Informations pratiques",
+          "title": "Détails du tournoi",
+          "slides": [
+            {
+              "title": "Tournoi Mario Kart World & Fortnite",
+              "date": "Samedi 27 Décembre 2025",
+              "time": "14h - 00h",
+              "location": "Mairie - Salle Fasquel / 35-17 Pl. Saint-Louis, Grenay",
+              "buttonText": "S'INSCRIRE",
+              "buttonLink": "/inscription",
+              "image": "/assets/img/placeholder-affiche-mk.jpg"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "statistics",
+      "data": {
+        "stats": [
+          {
+            "value": "128",
+            "label": "PLACES",
+            "sublabel": "DISPONIBLES"
+          },
+          {
+            "value": "2.500€",
+            "label": "Cash Prize",
+            "sublabel": "à gagner"
+          },
+          {
+            "value": "2",
+            "label": "Jeux",
+            "sublabel": "au programme"
+          },
+          {
+            "value": "10h",
+            "label": "Durée",
+            "sublabel": "de compétition"
+          },
+          {
+            "value": "Gratuit",
+            "label": "Inscription",
+            "sublabel": "100% gratuite"
+          },
+          {
+            "value": "+16",
+            "label": "Âge minimum",
+            "sublabel": "requis"
+          }
+        ]
+      }
+    },
+    {
+      "type": "simpleSection",
+      "data": {
+        "id": "tournament-format",
+        "subtitle": "FORMAT DU TOURNOI",
+        "title": "COMMENT ÇA SE PASSE ?",
+        "paragraphs": [
+          "Le tournoi se déroulera en deux phases distinctes : Mario Kart World de 14h à 18h, suivi de Fortnite de 18h à minuit.",
+          "Pour Mario Kart, les participants s'affronteront en plusieurs manches éliminatoires jusqu'à la grande finale. Format Battle Royale pour Fortnite avec plusieurs rounds pour déterminer le champion.",
+          "Chaque jeu aura son propre classement et ses propres récompenses. Les meilleurs joueurs de chaque discipline repartiront avec des prix en cash et des goodies exclusifs."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/1.webp",
+          "alt": "Format du tournoi",
+          "position": "right"
+        },
+        "ctas": [
+          {
+            "text": "VOIR LE RÈGLEMENT COMPLET",
+            "href": "/reglement",
+            "variant": "primary",
+            "size": "md"
+          }
+        ]
+      }
+    },
+    {
+      "type": "simpleSection",
+      "data": {
+        "id": "tournament-prizes",
+        "subtitle": "RÉCOMPENSES",
+        "title": "QU'EST-CE QU'ON GAGNE ?",
+        "paragraphs": [
+          "Un prize pool total de 2.500€ sera distribué aux meilleurs joueurs de chaque discipline.",
+          "Mario Kart World : 1er place 500€, 2ème place 300€, 3ème place 200€ + goodies pour le top 10.",
+          "Fortnite : 1er place 800€, 2ème place 400€, 3ème place 300€ + équipements gaming pour le top 5.",
+          "Tous les participants recevront un goodie bag et auront accès à des stands partenaires avec des offres exclusives."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/3.webp",
+          "alt": "Récompenses du tournoi",
+          "position": "left"
+        },
+        "ctas": []
+      }
+    },
+    {
+      "type": "simpleSection",
+      "data": {
+        "id": "tournament-rules",
+        "subtitle": "RÈGLEMENT",
+        "title": "CONDITIONS DE PARTICIPATION",
+        "paragraphs": [
+          "Le tournoi est ouvert à tous les joueurs âgés de 16 ans et plus. Les mineurs doivent présenter une autorisation parentale.",
+          "L'inscription est gratuite mais obligatoire. Les places sont limitées à 128 participants par jeu (premier arrivé, premier servi).",
+          "Chaque participant doit apporter son propre matériel (manette pour Mario Kart). Les PC et consoles seront fournis sur place.",
+          "Le respect des autres joueurs et de l'organisation est obligatoire. Tout comportement inapproprié entraînera une exclusion immédiate."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/5.webp",
+          "alt": "Règlement du tournoi",
+          "position": "right"
+        },
+        "ctas": [
+          {
+            "text": "TÉLÉCHARGER LE RÈGLEMENT PDF",
+            "href": "/reglement.pdf",
+            "variant": "secondary",
+            "size": "md"
+          }
+        ]
+      }
+    },
+    {
+      "type": "simpleSection",
+      "data": {
+        "id": "tournament-location",
+        "subtitle": "LIEU & ACCÈS",
+        "title": "COMMENT VENIR ?",
+        "paragraphs": [
+          "Le tournoi se déroulera à la Mairie de Grenay, dans la Salle Fasquel, située au 35-17 Place Saint-Louis.",
+          "Parking gratuit disponible à proximité. Accès en transport en commun : Bus ligne 12, arrêt 'Mairie de Grenay'.",
+          "La salle sera ouverte dès 13h30 pour l'accueil des participants. Nous vous recommandons d'arriver 30 minutes avant le début de votre session.",
+          "Restauration sur place avec food trucks et boissons. Espace détente et spectateurs disponible pour suivre les matchs en direct."
+        ],
+        "image": {
+          "src": "/assets/img/placeholders/7.webp",
+          "alt": "Lieu du tournoi",
+          "position": "left"
+        },
+        "ctas": [
+          {
+            "text": "VOIR SUR GOOGLE MAPS",
+            "href": "https://maps.google.com",
+            "variant": "primary",
+            "size": "md"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "data": {
+        "title": "PRÊT À RELEVER LE DÉFI ?",
+        "subtitle": "INSCRIPTION OUVERTE",
+        "paragraph": "Les places partent vite ! Ne manquez pas cette opportunité de participer au plus grand tournoi gaming de la région. Inscription 100% gratuite, prizes exceptionnels et ambiance garantie.",
+        "ctas": [
+          {
+            "text": "S'INSCRIRE MAINTENANT",
+            "href": "/inscription",
+            "variant": "primary",
+            "size": "lg"
+          },
+          {
+            "text": "PARTAGER AVEC MES AMIS",
+            "href": "#share",
+            "variant": "secondary",
+            "size": "lg"
+          }
+        ]
+      },
+      "props": {
+        "glowMode": "centerBlinking",
+        "backgroundColor": "purple",
+        "speed": 40
+      }
+    },
+    {
+      "type": "gallery",
+      "data": {
+        "title": "Éditions précédentes",
+        "subtitle": "en images",
+        "images": [
+          {
+            "src": "/assets/img/placeholders/1.webp",
+            "alt": "Tournoi précédent 1"
+          },
+          {
+            "src": "/assets/img/placeholders/2.webp",
+            "alt": "Tournoi précédent 2"
+          },
+          {
+            "src": "/assets/img/placeholders/3.webp",
+            "alt": "Tournoi précédent 3"
+          },
+          {
+            "src": "/assets/img/placeholders/4.webp",
+            "alt": "Tournoi précédent 4"
+          },
+          {
+            "src": "/assets/img/placeholders/5.webp",
+            "alt": "Tournoi précédent 5"
+          },
+          {
+            "src": "/assets/img/placeholders/6.webp",
+            "alt": "Tournoi précédent 6"
+          },
+          {
+            "src": "/assets/img/placeholders/7.webp",
+            "alt": "Tournoi précédent 7"
+          },
+          {
+            "src": "/assets/img/placeholders/8.webp",
+            "alt": "Tournoi précédent 8"
+          },
+          {
+            "src": "/assets/img/placeholders/9.webp",
+            "alt": "Tournoi précédent 9"
+          },
+          {
+            "src": "/assets/img/placeholders/10.webp",
+            "alt": "Tournoi précédent 10"
+          },
+          {
+            "src": "/assets/img/placeholders/11.webp",
+            "alt": "Tournoi précédent 11"
+          },
+          {
+            "src": "/assets/img/placeholders/12.webp",
+            "alt": "Tournoi précédent 12"
+          }
+        ]
+      }
+    },
+    {
+      "type": "testimony",
+      "data": {
+        "title": "Ils ont participé",
+        "subtitle": "Témoignages",
+        "testimonials": [
+          {
+            "id": 1,
+            "quote": "Une organisation au top ! L'ambiance était incroyable et les lots vraiment généreux. J'ai hâte de revenir l'année prochaine !",
+            "author": "Thomas Dubois",
+            "role": "Vainqueur Mario Kart 2024",
+            "avatar": "https://images.unsplash.com/photo-1701615004837-40d8573b6652?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          },
+          {
+            "id": 2,
+            "quote": "Premier tournoi pour moi et je n'ai pas été déçu. Le niveau était élevé mais l'esprit sportif était présent. Merci HGC !",
+            "author": "Léa Martin",
+            "role": "Participante Fortnite 2024",
+            "avatar": "https://plus.unsplash.com/premium_photo-1671656349218-5218444643d8?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          },
+          {
+            "id": 3,
+            "quote": "Des tournois comme ça, on en redemande ! Tout était parfait : l'accueil, le matériel, l'ambiance. Bravo à toute l'équipe.",
+            "author": "Kevin Rousseau",
+            "role": "Finaliste Mario Kart 2024",
+            "avatar": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
+        ]
+      }
+    }
+  ]
+}
