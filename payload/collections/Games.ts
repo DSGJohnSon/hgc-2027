@@ -4,7 +4,10 @@ import { anyone, isEditor } from '../access'
 import { colorField } from '../fields/color'
 import { imageField } from '../fields/image'
 import { slugField } from '../fields/slug'
-import { CACHE_TAGS, revalidateCollection, revalidateOnDelete } from '../hooks/revalidate'
+import { CACHE_TAGS, revalidateMany, revalidateManyOnDelete } from '../hooks/revalidate'
+
+// Les jeux sont aussi intégrés à la page d'accueil (section « À quoi tu joues ? »).
+const AFFECTED_TAGS = [CACHE_TAGS.games, CACHE_TAGS.homePage]
 
 /**
  * Référentiel des jeux — miroir de `data/games.json`.
@@ -32,8 +35,8 @@ export const Games: CollectionConfig = {
   },
   access: { read: anyone, create: isEditor, update: isEditor, delete: isEditor },
   hooks: {
-    afterChange: [revalidateCollection(CACHE_TAGS.games)],
-    afterDelete: [revalidateOnDelete(CACHE_TAGS.games)],
+    afterChange: [revalidateMany(AFFECTED_TAGS)],
+    afterDelete: [revalidateManyOnDelete(AFFECTED_TAGS)],
   },
   fields: [
     slugField("Identifiant du jeu (ex. « fortnite »). Référencé par les événements."),

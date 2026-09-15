@@ -6,8 +6,6 @@ import config from '../payload.config'
 import { events } from '@/data/events'
 import { eventSeries } from '@/data/event-series'
 import { actualites } from '@/data/actualites'
-import { servicesBtoB } from '@/data/services-btob'
-import { servicesBtoC } from '@/data/services-btoc'
 import gamesData from '@/data/games.json'
 import categoriesData from '@/data/categories.json'
 
@@ -57,8 +55,6 @@ const SOURCES: Array<[string, unknown]> = [
   ['events', events],
   ['event-series', eventSeries],
   ['actualites', actualites],
-  ['services-btob', servicesBtoB],
-  ['services-btoc', servicesBtoC],
   ['games', gamesData],
   ['categories', categoriesData],
 ]
@@ -68,7 +64,6 @@ const SOURCES: Array<[string, unknown]> = [
 const COLLECTIONS = [
   'events',
   'event-series',
-  'services',
   'actualites',
   'games',
   'categories',

@@ -38,13 +38,14 @@ de **Blocks** de Payload. Chaque variante de l'union devient un Block portant **
 | `imageText`, `ageDistribution`, `roleSplit`, `highlight`, `speakers`, `themes`, `games`, `equipment` | 1 Block chacun |
 
 Payload sérialise en `{ blockType: "text", ... }` → un mapper renomme `blockType` en `type`
-et **les composants de rendu existants ne changent pas** (`EventInfo.tsx`, templates services,
-sections de la home…). C'est ce qui rend la migration soutenable.
+et **les composants de rendu existants ne changent pas** (`EventInfo.tsx`, sections de la
+home…). C'est ce qui rend la migration soutenable.
 
 ### Découpage
 
 **Collections** (listes) : `users`, `media`, `games`, `categories`, `actualites`,
-`events`, `event-series`, `services`
+`events`, `event-series` (la collection `services` a depuis été retirée au profit de
+pages écrites à la main)
 
 **Globals** (contenu unique) : `header`, `footer`, `home-page`, `about`, `documents`,
 `contact`, `tournament-detail`

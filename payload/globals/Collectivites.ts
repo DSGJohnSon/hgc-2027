@@ -1,13 +1,4 @@
-import type {
-  Field,
-  GlobalConfig,
-  GroupField,
-  TextField,
-  TextareaField,
-} from 'payload'
-
-import type { ImageData } from '@/types'
-import { collectivitesContent as DEFAULTS } from '@/data/pages/collectivites'
+import type { Field, GlobalConfig, TextField, TextareaField } from 'payload'
 
 import { anyone, isEditor } from '../access'
 import { imageField } from '../fields/image'
@@ -21,46 +12,22 @@ import { CACHE_TAGS, revalidateGlobal } from '../hooks/revalidate'
  * et fixe. Seuls varient les textes, les images et le nombre d'éléments dans les
  * listes (cartes, chiffres, visuels du carrousel).
  *
- * Chaque champ porte comme valeur par défaut le contenu réellement en ligne
- * (voir `data/pages/collectivites.ts`). Conséquence utile : le backoffice
- * s'ouvre déjà rempli, et la page s'affiche correctement même tant que personne
- * n'a enregistré ce global — il n'y a donc aucun seed à lancer.
+ * Aucun contenu n'est préchargé depuis le code : tout ce qui s'affiche sur la
+ * page est saisi ici. Un champ laissé vide reste vide en ligne, ce qui rend
+ * tout oubli visible immédiatement.
  */
 
-/** Champ image préchargé avec le visuel actuellement en ligne. */
-const image = (
-  name: string,
-  label: string,
-  fallback: ImageData,
-  description?: string,
-): GroupField => ({
-  ...imageField({ name, label, description }),
-  defaultValue: { path: fallback.src, alt: fallback.alt },
-})
-
-const textField = (
-  name: string,
-  label: string,
-  defaultValue: string,
-  description?: string,
-): TextField => ({
+const textField = (name: string, label: string, description?: string): TextField => ({
   name,
   type: 'text',
   label,
-  defaultValue,
   admin: description ? { description } : undefined,
 })
 
-const areaField = (
-  name: string,
-  label: string,
-  defaultValue: string,
-  description?: string,
-): TextareaField => ({
+const areaField = (name: string, label: string, description?: string): TextareaField => ({
   name,
   type: 'textarea',
   label,
-  defaultValue,
   admin: description ? { description } : undefined,
 })
 
@@ -99,25 +66,17 @@ export const CollectivitesPage: GlobalConfig = {
               type: 'group',
               label: false,
               fields: [
-                textField('titleLine1', 'Titre — ligne 1', DEFAULTS.hero.titleLine1),
-                textField('titleLine2', 'Titre — ligne 2', DEFAULTS.hero.titleLine2),
+                textField('titleLine1', 'Titre — ligne 1'),
+                textField('titleLine2', 'Titre — ligne 2'),
                 {
                   type: 'row',
                   fields: [
                     {
-                      ...textField(
-                        'titleLine3Start',
-                        'Titre — ligne 3 (début)',
-                        DEFAULTS.hero.titleLine3Start,
-                      ),
+                      ...textField('titleLine3Start', 'Titre — ligne 3 (début)'),
                       admin: { width: '50%' },
                     },
                     {
-                      ...textField(
-                        'titleLine3Accent',
-                        'Titre — ligne 3 (en couleur)',
-                        DEFAULTS.hero.titleLine3Accent,
-                      ),
+                      ...textField('titleLine3Accent', 'Titre — ligne 3 (en couleur)'),
                       admin: {
                         width: '50%',
                         description: 'Cette partie s’affiche dans la couleur d’accent.',
@@ -125,14 +84,22 @@ export const CollectivitesPage: GlobalConfig = {
                     },
                   ],
                 },
-                areaField('intro', 'Texte d’introduction', DEFAULTS.hero.intro),
+                areaField('intro', 'Texte d’introduction'),
+                // Visuel désormais uniquement envoyé via la bibliothèque média :
+                // pas de repli sur un chemin historique pour ce bandeau.
+                imageField({
+                  name: 'backgroundImage',
+                  label: 'Image de fond',
+                  description:
+                    'Visuel affiché en arrière-plan du bandeau, sous un dégradé sombre.',
+                  withPath: false,
+                }),
                 {
                   name: 'buttons',
                   type: 'array',
                   label: 'Boutons',
                   labels: { singular: 'Bouton', plural: 'Boutons' },
                   maxRows: 2,
-                  defaultValue: DEFAULTS.hero.buttons,
                   admin: {
                     description:
                       'Le premier bouton est mis en avant, le second est secondaire.',
@@ -144,13 +111,6 @@ export const CollectivitesPage: GlobalConfig = {
                   type: 'array',
                   label: 'Encart chiffré',
                   labels: { singular: 'Encart', plural: 'Encarts' },
-                  defaultValue: DEFAULTS.hero.highlights.map((highlight) => ({
-                    value: highlight.value,
-                    label: highlight.label,
-                    icon: highlight.icon
-                      ? { path: highlight.icon.src, alt: highlight.icon.alt }
-                      : undefined,
-                  })),
                   admin: {
                     description:
                       'Bloc coloré à droite du titre. Renseignez soit une valeur, soit une icône.',
@@ -180,33 +140,29 @@ export const CollectivitesPage: GlobalConfig = {
                         },
                       ],
                     },
+                    // Icône désormais uniquement envoyée via la bibliothèque média :
+                    // pas de repli sur un chemin historique pour ces encarts.
                     imageField({
                       name: 'icon',
                       label: 'Icône (optionnelle)',
                       description:
                         'Si une icône est fournie, elle remplace la valeur chiffrée.',
+                      withPath: false,
                     }),
                   ],
                 },
-                image(
-                  'backgroundImage',
-                  'Image de fond',
-                  DEFAULTS.hero.backgroundImage,
-                  'Visuel affiché en arrière-plan du bandeau, sous un dégradé sombre.',
-                ),
                 {
                   name: 'sliderImages',
                   type: 'array',
                   label: 'Carrousel de photos',
                   labels: { singular: 'Photo', plural: 'Photos' },
-                  defaultValue: DEFAULTS.hero.sliderImages.map((img) => ({
-                    image: { path: img.src, alt: img.alt },
-                  })),
                   admin: {
                     description:
                       'Bandeau de photos défilant sous le titre. Comptez au moins 4 visuels pour un défilement fluide.',
                   },
-                  fields: [imageField({ name: 'image', label: 'Photo' })],
+                  // Photos désormais uniquement envoyées via la bibliothèque média :
+                  // pas de repli sur un chemin historique pour ce carrousel.
+                  fields: [imageField({ name: 'image', label: 'Photo', withPath: false })],
                 },
               ],
             },
@@ -222,26 +178,21 @@ export const CollectivitesPage: GlobalConfig = {
               type: 'group',
               label: false,
               fields: [
-                textField('eyebrow', 'Surtitre', DEFAULTS.whyUs.eyebrow),
-                textField('title', 'Titre', DEFAULTS.whyUs.title),
+                textField('eyebrow', 'Surtitre'),
+                textField('title', 'Titre'),
                 {
                   name: 'cards',
                   type: 'array',
                   label: 'Arguments',
                   labels: { singular: 'Argument', plural: 'Arguments' },
-                  defaultValue: DEFAULTS.whyUs.cards.map((card) => ({
-                    image: { path: card.image.src, alt: card.image.alt },
-                    titleStart: card.titleStart,
-                    titleAccent: card.titleAccent,
-                    text: card.text,
-                    framing: card.framing,
-                  })),
                   admin: {
                     description:
                       'Affichés sur une seule ligne à partir de 5 arguments ; au-delà, la grille passe à la ligne.',
                   },
                   fields: [
-                    imageField({ name: 'image', label: 'Illustration' }),
+                    // Illustrations désormais uniquement envoyées via la bibliothèque média :
+                    // pas de repli sur un chemin historique pour cette section.
+                    imageField({ name: 'image', label: 'Illustration', withPath: false }),
                     {
                       type: 'row',
                       fields: [
@@ -262,21 +213,6 @@ export const CollectivitesPage: GlobalConfig = {
                       ],
                     },
                     { name: 'text', type: 'textarea', label: 'Description', required: true },
-                    {
-                      name: 'framing',
-                      type: 'select',
-                      label: 'Cadrage de l’illustration',
-                      defaultValue: 'normal',
-                      options: [
-                        { label: 'Normal', value: 'normal' },
-                        { label: 'Réduit', value: 'reduit' },
-                        { label: 'Très réduit', value: 'tresReduit' },
-                      ],
-                      admin: {
-                        description:
-                          'Ajuste le zoom de l’image dans son cadre. À régler si le sujet est mal centré après un remplacement.',
-                      },
-                    },
                   ],
                 },
               ],
@@ -293,14 +229,19 @@ export const CollectivitesPage: GlobalConfig = {
               type: 'group',
               label: false,
               fields: [
-                textField('title', 'Titre', DEFAULTS.figures.title),
-                image('backgroundImage', 'Image de fond', DEFAULTS.figures.backgroundImage),
+                textField('title', 'Titre'),
+                // Visuel désormais uniquement envoyé via la bibliothèque média :
+                // pas de repli sur un chemin historique pour cette section.
+                imageField({
+                  name: 'backgroundImage',
+                  label: 'Image de fond',
+                  withPath: false,
+                }),
                 {
                   name: 'items',
                   type: 'array',
                   label: 'Chiffres',
                   labels: { singular: 'Chiffre', plural: 'Chiffres' },
-                  defaultValue: DEFAULTS.figures.items,
                   admin: {
                     description:
                       'Chaque chiffre est animé au défilement, de 0 jusqu’à la valeur indiquée.',
@@ -364,24 +305,21 @@ export const CollectivitesPage: GlobalConfig = {
               type: 'group',
               label: false,
               fields: [
-                textField('title', 'Titre', DEFAULTS.solutions.title),
+                textField('title', 'Titre'),
                 {
                   name: 'cards',
                   type: 'array',
                   label: 'Solutions proposées',
                   labels: { singular: 'Solution', plural: 'Solutions' },
-                  defaultValue: DEFAULTS.solutions.cards.map((card) => ({
-                    image: { path: card.image.src, alt: card.image.alt },
-                    icon: { path: card.icon.src, alt: card.icon.alt },
-                    title: card.title,
-                    text: card.text,
-                  })),
                   fields: [
-                    imageField({ name: 'image', label: 'Visuel de la carte' }),
+                    // Visuels désormais uniquement envoyés via la bibliothèque média :
+                    // pas de repli sur un chemin historique pour cette section.
+                    imageField({ name: 'image', label: 'Visuel de la carte', withPath: false }),
                     imageField({
                       name: 'icon',
                       label: 'Icône',
                       description: 'Petite icône ronde en haut à gauche de la carte.',
+                      withPath: false,
                     }),
                     { name: 'title', type: 'text', label: 'Titre', required: true },
                     { name: 'text', type: 'textarea', label: 'Description', required: true },
@@ -401,14 +339,13 @@ export const CollectivitesPage: GlobalConfig = {
               type: 'group',
               label: false,
               fields: [
-                textField('eyebrow', 'Surtitre', DEFAULTS.testimonials.eyebrow),
-                textField('title', 'Titre', DEFAULTS.testimonials.title),
-                areaField('intro', 'Texte d’introduction', DEFAULTS.testimonials.intro),
+                textField('eyebrow', 'Surtitre'),
+                textField('title', 'Titre'),
+                areaField('intro', 'Texte d’introduction'),
                 {
                   name: 'button',
                   type: 'group',
                   label: 'Bouton',
-                  defaultValue: DEFAULTS.testimonials.button,
                   fields: buttonFields,
                 },
                 {
@@ -416,22 +353,24 @@ export const CollectivitesPage: GlobalConfig = {
                   type: 'array',
                   label: 'Témoignages',
                   labels: { singular: 'Témoignage', plural: 'Témoignages' },
-                  defaultValue: DEFAULTS.testimonials.items.map((item) => ({
-                    quote: item.quote,
-                    authorLogo: {
-                      path: item.authorLogo.src,
-                      alt: item.authorLogo.alt,
-                    },
-                    authorName: item.authorName,
-                    eventLabel: item.eventLabel,
-                  })),
                   admin: {
                     description:
                       'Seul le premier témoignage est affiché pour le moment ; le compteur indique le total.',
                   },
                   fields: [
                     { name: 'quote', type: 'textarea', label: 'Citation', required: true },
-                    imageField({ name: 'authorLogo', label: 'Logo de la collectivité' }),
+                    // Le logo n'est plus ressaisi ici : on pointe la collectivité dans le
+                    // référentiel, et son logo suit automatiquement s'il y change.
+                    {
+                      name: 'partner',
+                      type: 'relationship',
+                      relationTo: 'partners',
+                      label: 'Logo de la collectivité',
+                      admin: {
+                        description:
+                          'Choisissez la collectivité dans le référentiel (Référentiels → Partenaires). Son logo et son nom servent de visuel et de texte alternatif ; tant qu’aucune n’est choisie, le témoignage s’affiche sans logo.',
+                      },
+                    },
                     {
                       type: 'row',
                       fields: [
@@ -466,8 +405,8 @@ export const CollectivitesPage: GlobalConfig = {
               type: 'group',
               label: false,
               fields: [
-                textField('subtitle', 'Surtitre', DEFAULTS.partners.subtitle),
-                textField('title', 'Titre', DEFAULTS.partners.title),
+                textField('subtitle', 'Surtitre'),
+                textField('title', 'Titre'),
                 {
                   name: 'selection',
                   type: 'relationship',
@@ -476,7 +415,7 @@ export const CollectivitesPage: GlobalConfig = {
                   label: 'Partenaires affichés',
                   admin: {
                     description:
-                      'Sélectionnez les partenaires dans le référentiel (Référentiels → Partenaires). Tant que rien n’est sélectionné, la liste actuellement en ligne reste affichée.',
+                      'Sélectionnez les partenaires dans le référentiel (Référentiels → Partenaires). Seuls ceux dont le logo a été envoyé apparaissent sur la page.',
                   },
                 },
               ],
@@ -497,18 +436,8 @@ export const CollectivitesPage: GlobalConfig = {
                   'Titre et description affichés par Google et lors du partage sur les réseaux sociaux.',
               },
               fields: [
-                textField(
-                  'title',
-                  'Titre de la page',
-                  DEFAULTS.seo.title ?? '',
-                  'Environ 60 caractères.',
-                ),
-                areaField(
-                  'description',
-                  'Description',
-                  DEFAULTS.seo.description ?? '',
-                  'Environ 155 caractères.',
-                ),
+                textField('title', 'Titre de la page', 'Environ 60 caractères.'),
+                areaField('description', 'Description', 'Environ 155 caractères.'),
               ],
             },
           ],

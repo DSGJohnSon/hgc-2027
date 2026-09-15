@@ -167,7 +167,7 @@ export default function Partners({
               {totalLogos <= 5 ? (
                 <div className="flex flex-wrap justify-center items-center gap-8 w-full">
                   {data.logos.map((logo, index: number) => (
-                    <LogoItem key={`desktop-logo-row1-${index}`} logo={logo} />
+                    <LogoItem key={`desktop-logo-row1-${index}`} logo={logo}/>
                   ))}
                 </div>
               ) : (

@@ -1,5 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
+import dns from 'node:dns'
 
 import sharp from 'sharp'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -17,10 +18,16 @@ import { Partners } from './payload/collections/Partners'
 import { Actualites } from './payload/collections/Actualites'
 import { Events } from './payload/collections/Events'
 import { EventSeries } from './payload/collections/EventSeries'
-import { Services } from './payload/collections/Services'
 import { CollectivitesPage } from './payload/globals/Collectivites'
+import { HomePage } from './payload/globals/Home'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Sur ce poste, le résolveur DNS par défaut de Node échoue par intermittence
+// (ECONNREFUSED) sur les requêtes SRV utilisées par les URI mongodb+srv://,
+// alors que la résolution système fonctionne. On force des DNS publics avant
+// la connexion pour éviter ces coupures.
+dns.setServers(['1.1.1.1', '8.8.8.8'])
 
 // Vercel Blob n'est activé que si le jeton est fourni. Sans lui (développement
 // local), Payload stocke les fichiers sur disque dans `public/media`.
@@ -34,12 +41,11 @@ const resendKey = process.env.RESEND_API_KEY
 export default buildConfig({
   editor: lexicalEditor(),
 
-  globals: [CollectivitesPage],
+  globals: [HomePage, CollectivitesPage],
 
   collections: [
     Events,
     EventSeries,
-    Services,
     Actualites,
     Games,
     Categories,
@@ -70,6 +76,11 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
+    // L'URI Atlas ne précise pas de base (pas de `/nom` avant le `?`), donc le
+    // driver retombe sur `test` par défaut. La vraie base du projet est `hgc-website`.
+    connectOptions: {
+      dbName: 'hgc-website',
+    },
   }),
   sharp,
   serverURL: process.env.PAYLOAD_SERVER_URL || 'http://localhost:3000',

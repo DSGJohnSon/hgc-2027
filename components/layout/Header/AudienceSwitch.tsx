@@ -1,26 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LuArrowLeftRight } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
-import { rememberAudience, type Audience } from "@/lib/audience";
+import { AUDIENCE_HOME, type Audience } from "@/lib/audience";
+import { useAudiencePicker } from "@/components/providers/AudiencePickerProvider";
 
 /**
- * Bascule entre les deux versions du site.
+ * Affiche la version du site actuellement consultée et rouvre la popup de
+ * sélection (`AudiencePicker`) pour en changer.
  *
- * Sans elle, un visiteur qui se trompe au premier clic reste enfermé un an dans
- * la mauvaise version : le cookie le redirigerait à chaque retour. Cliquer ici
- * réécrit donc la préférence en même temps que l'on navigue.
- *
- * Ce sont de vrais liens `<a>` : les robots les suivent, ce qui relie les deux
- * pages d'accueil entre elles.
+ * Uniquement affiché sur l'une des deux pages d'accueil : ailleurs, la notion
+ * de "version affichée" n'a pas de sens, ces pages étant communes aux deux
+ * publics.
  */
-
-const OPTIONS: Array<{ audience: Audience; href: string; label: string }> = [
-  { audience: "joueurs", href: "/", label: "Joueurs" },
-  { audience: "collectivites", href: "/collectivites", label: "Collectivités" },
-];
+const LABELS: Record<Audience, string> = {
+  joueurs: "Version Joueurs",
+  collectivites: "Version Collectivités",
+};
 
 const AudienceSwitch = ({
   className,
@@ -30,39 +28,31 @@ const AudienceSwitch = ({
   onNavigate?: () => void;
 }) => {
   const pathname = usePathname();
+  const { openPicker } = useAudiencePicker();
+
+  const isJoueurs = pathname === AUDIENCE_HOME.joueurs;
+  const isCollectivites = pathname === AUDIENCE_HOME.collectivites;
+
+  if (!isJoueurs && !isCollectivites) return null;
+
+  const current: Audience = isCollectivites ? "collectivites" : "joueurs";
 
   return (
-    <div
-      className={cn("flex items-center gap-1", className)}
-      role="group"
-      aria-label="Version du site"
+    <button
+      type="button"
+      onClick={() => {
+        openPicker();
+        onNavigate?.();
+      }}
+      aria-label="Changer la version du site"
+      className={cn(
+        "flex items-center gap-2 text-theme font-rajdhani font-semibold text-xs uppercase tracking-wider transition-colors hover:text-white",
+        className,
+      )}
     >
-      <span className="text-gray-500 font-rajdhani text-xs uppercase tracking-wider mr-1">
-        Je suis
-      </span>
-      {OPTIONS.map(({ audience, href, label }) => {
-        const isCurrent = pathname === href;
-        return (
-          <Link
-            key={audience}
-            href={href}
-            aria-current={isCurrent ? "page" : undefined}
-            onClick={() => {
-              rememberAudience(audience);
-              onNavigate?.();
-            }}
-            className={cn(
-              "font-rajdhani text-xs uppercase tracking-wider px-2 py-1 rounded transition-colors",
-              isCurrent
-                ? "text-theme font-bold"
-                : "text-gray-400 hover:text-white",
-            )}
-          >
-            {label}
-          </Link>
-        );
-      })}
-    </div>
+      {LABELS[current]}
+      <LuArrowLeftRight className="size-3.5 shrink-0" aria-hidden />
+    </button>
   );
 };
 

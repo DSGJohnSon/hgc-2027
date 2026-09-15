@@ -6,12 +6,13 @@ import { ImageData } from "@/types";
 interface LogoProps {
   logo: ImageData;
   className?: string;
+  href?: string;
 }
 
-const Logo: React.FC<LogoProps> = ({ logo, className = "" }) => {
+const Logo: React.FC<LogoProps> = ({ logo, className = "", href = "/" }) => {
   return (
-    <div className={`relative w-15 sm:w-[100px] py-4 ${className}`}>
-      <Link href="/" className="block w-full">
+    <div className={`relative w-15 xl:w-[100px] py-4 ${className}`}>
+      <Link href={href} className="block w-full">
         <Image
           src={logo.src}
           alt={logo.alt}

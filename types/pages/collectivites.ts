@@ -8,9 +8,6 @@ import type { ImageData } from "@/types";
  * dessous correspond à une section visible de la page.
  */
 
-/** Cadrage de l'illustration d'une carte « Pourquoi nous ». */
-export type CardFraming = "normal" | "reduit" | "tresReduit";
-
 export interface CollectivitesButton {
   label: string;
   href: string;
@@ -30,7 +27,6 @@ export interface WhyUsCard {
   /** Seconde partie du titre, mise en couleur. */
   titleAccent: string;
   text: string;
-  framing: CardFraming;
 }
 
 export interface FigureItem {
@@ -64,7 +60,8 @@ export interface CollectivitesPageData {
     intro: string;
     buttons: CollectivitesButton[];
     highlights: CollectivitesHighlight[];
-    backgroundImage: ImageData;
+    /** Absente tant qu'aucun fichier n'a été envoyé depuis le backoffice. */
+    backgroundImage?: ImageData;
     sliderImages: ImageData[];
   };
   whyUs: {
@@ -74,7 +71,8 @@ export interface CollectivitesPageData {
   };
   figures: {
     title: string;
-    backgroundImage: ImageData;
+    /** Absente tant qu'aucun fichier n'a été envoyé depuis le backoffice. */
+    backgroundImage?: ImageData;
     items: FigureItem[];
   };
   solutions: {
@@ -91,11 +89,7 @@ export interface CollectivitesPageData {
   partners: {
     subtitle: string;
     title: string;
-    /**
-     * Partenaires choisis dans le référentiel. Tant que la sélection est vide,
-     * la liste historique de `data/pages/collectivites.ts` est affichée — ce qui
-     * évite que la section disparaisse avant que quelqu'un ait fait son choix.
-     */
+    /** Partenaires choisis dans le référentiel, limités à ceux qui ont un logo. */
     logos: Array<{ alt: string; src: string }>;
   };
   seo: {

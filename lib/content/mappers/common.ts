@@ -145,3 +145,17 @@ export const toDateString = (value: unknown): string => {
 /** Retire les clés `undefined` pour que les objets produits collent aux types optionnels. */
 export const compact = <T extends Raw>(object: T): T =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined)) as T
+
+/** Texte saisi dans le backoffice, ou chaîne vide s'il est absent. */
+export const text = (value: unknown): string => (typeof value === 'string' ? value : '')
+
+/** Boutons `{ label, href }`, en écartant ceux sans libellé. */
+export const toButtons = (rows: Raw[] | null | undefined) =>
+  Array.isArray(rows)
+    ? rows
+        .map((row) => ({
+          label: String(row?.label ?? ''),
+          href: String(row?.href ?? '#'),
+        }))
+        .filter((button) => button.label.length > 0)
+    : []

@@ -3,18 +3,14 @@ import type { Payload } from 'payload'
 import { actualites } from '@/data/actualites'
 import { events } from '@/data/events'
 import { eventSeries } from '@/data/event-series'
-import { servicesBtoB } from '@/data/services-btob'
-import { servicesBtoC } from '@/data/services-btoc'
 
 import {
   buildIndex,
   resolveIds,
   toDescriptionBlocks,
   toImage,
-  toImageRows,
   toPositionedImage,
   toRows,
-  toStatRows,
   toTextContentBlocks,
   upsert,
   type Raw,
@@ -153,131 +149,4 @@ export const seedEvents = async (payload: Payload) => {
     )
   }
   console.log(`  ${eventSeries.length} séries`)
-}
-
-/** Blocs de contenu d'une page Service — inverse de `toServiceContent`. */
-const toServiceBlocks = (blocks: Raw[] | undefined, gameIndex: Map<string, string>, context: string): Raw[] =>
-  (blocks ?? [])
-    .map((block): Raw | null => {
-      switch (block.type) {
-        case 'text':
-          return { blockType: 'text', content: toTextContentBlocks(block.content) }
-        case 'statistics':
-          return { blockType: 'statistics', stats: toStatRows(block.content?.stats) }
-        case 'gallery':
-          return {
-            blockType: 'gallery',
-            title: block.content?.title ?? '',
-            subtitle: block.content?.subtitle ?? '',
-            images: toImageRows(block.content?.images),
-          }
-        case 'imageText':
-          return {
-            blockType: 'imageText',
-            title: block.title ?? '',
-            text: toRows(block.text),
-            image: toImage(block.image, block.imageAlt),
-            reverse: Boolean(block.reverse),
-          }
-        case 'ageDistribution':
-          return {
-            blockType: 'ageDistribution',
-            title: block.title ?? '',
-            buckets: block.buckets ?? [],
-          }
-        case 'roleSplit':
-          return {
-            blockType: 'roleSplit',
-            cityTitle: block.cityTitle ?? '',
-            cityItems: toRows(block.cityItems),
-            hgcTitle: block.hgcTitle ?? '',
-            hgcItems: toRows(block.hgcItems),
-          }
-        case 'highlight':
-          return { blockType: 'highlight', title: block.title ?? '', text: block.text ?? '' }
-        case 'speakers':
-          return {
-            blockType: 'speakers',
-            title: block.title ?? '',
-            speakers: (block.speakers ?? []).map((speaker: Raw) => ({
-              name: speaker.name,
-              role: speaker.role,
-              photo: toImage(speaker.photo),
-              linkedin: speaker.linkedin ?? '',
-            })),
-          }
-        case 'themes':
-          return { blockType: 'themes', title: block.title ?? '', items: block.items ?? [] }
-        case 'games':
-          return {
-            blockType: 'games',
-            title: block.title ?? '',
-            subtitle: block.subtitle ?? '',
-            games: resolveIds(block.gameIds, gameIndex, context),
-            randomize: Boolean(block.randomize),
-          }
-        case 'equipment':
-          return {
-            blockType: 'equipment',
-            title: block.title ?? '',
-            items: (block.items ?? []).map((item: Raw) => ({
-              label: item.label,
-              icon: item.icon ?? '',
-              image: toImage(item.image),
-            })),
-          }
-        default:
-          console.warn(`  ! bloc de service inconnu « ${block.type} », ignoré`)
-          return null
-      }
-    })
-    .filter((block): block is Raw => block !== null)
-
-/** Services BtoB et BtoC — `data/services-btob.ts`, `data/services-btoc.ts`. */
-export const seedServices = async (payload: Payload) => {
-  const gameIndex = await buildIndex(payload, 'games')
-
-  const common = (service: Raw) => ({
-    title: service.title,
-    tagline: service.tagline ?? '',
-    shortDescription: service.shortDescription,
-    color: service.color,
-    logo: toImage(service.logo),
-    cardThumbnail: toImage(service.cardThumbnail),
-    heroBanner: toImage(service.heroBanner),
-    heroBannerMobile: toImage(service.heroBannerMobile),
-    content: toServiceBlocks(service.content, gameIndex, service.id),
-    isDraft: Boolean(service.isDraft),
-  })
-
-  for (const service of servicesBtoB) {
-    await upsert(
-      payload,
-      'services',
-      service.id,
-      {
-        ...common(service as Raw),
-        target: 'btob',
-        stats: toStatRows(service.stats as Raw[]),
-        formProjectLabel: service.formProjectLabel ?? '',
-      },
-      { versioned: true },
-    )
-  }
-  console.log(`  ${servicesBtoB.length} services BtoB`)
-
-  for (const service of servicesBtoC) {
-    await upsert(
-      payload,
-      'services',
-      service.id,
-      {
-        ...common(service as Raw),
-        target: 'btoc',
-        helloAssoEmbed: service.helloAssoEmbed ?? '',
-      },
-      { versioned: true },
-    )
-  }
-  console.log(`  ${servicesBtoC.length} services BtoC`)
 }

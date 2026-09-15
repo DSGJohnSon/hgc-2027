@@ -193,7 +193,7 @@ npm run seed
 ```
 
 Le seed rejoue la migration depuis les fichiers `data/`. Il recrée les
-événements, séries, services, actualités, jeux, catégories, les pages et les
+événements, séries, actualités, jeux, catégories, les pages et les
 **fiches partenaires** (noms et liens).
 
 Ce qu'il **ne recrée pas**, par conception : les fichiers envoyés dans la

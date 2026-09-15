@@ -7,7 +7,6 @@ import CountingNumber from "@/components/ui/counting-number";
 import Partners from "@/components/sections/Partners";
 import TestimonialsCarousel from "@/components/sections/TestimonialsCarousel";
 import { getCollectivitesPage } from "@/lib/content";
-import type { CardFraming } from "@/types/pages/collectivites";
 
 // Page d’accueil « collectivités » : cible secondaire, sur son URL propre.
 // Contenu modifiable depuis le backoffice (Pages → Page Collectivités).
@@ -19,13 +18,6 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: "/collectivites" },
   };
 }
-
-/** Zoom de l'illustration d'un argument, réglable depuis le backoffice. */
-const FRAMING_CLASS: Record<CardFraming, string> = {
-  normal: "scale-120 -translate-y-3",
-  reduit: "scale-80 translate-y-8",
-  tresReduit: "scale-70 translate-y-8",
-};
 
 export default async function Collectivites() {
   const { hero, whyUs, figures, solutions, testimonials, partners } =
@@ -115,12 +107,14 @@ export default async function Collectivites() {
           ))}
         </InfiniteSlider>
         <div className="absolute top-0 left-0 bottom-1/3 right-0 lg:left-1/3 lg:bottom-1/2 -z-1">
-          <Image
-            src={hero.backgroundImage.src}
-            alt={hero.backgroundImage.alt}
-            fill
-            style={{ objectFit: "cover" }}
-          />
+          {hero.backgroundImage && (
+            <Image
+              src={hero.backgroundImage.src}
+              alt={hero.backgroundImage.alt}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          )}
           <div className="absolute inset-0 bg-linear-to-t from-gray-950 via-gray-950/50 to-gray-950"></div>
           <div className="absolute inset-0 bg-linear-to-r from-gray-950 to-gray-950/0"></div>
         </div>
@@ -147,7 +141,7 @@ export default async function Collectivites() {
                   alt={card.image.alt}
                   width={800}
                   height={800}
-                  className={`object-cover ${FRAMING_CLASS[card.framing]}`}
+                  className="object-cover"
                 />
               </div>
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-rajdhani uppercase text-center flex flex-col">
@@ -184,13 +178,15 @@ export default async function Collectivites() {
               </span>
             </div>
           ))}
-          <Image
-            src={figures.backgroundImage.src}
-            alt={figures.backgroundImage.alt}
-            fill
-            style={{ objectFit: "cover" }}
-            className="absolute -inset-1 -z-1 opacity-40"
-          />
+          {figures.backgroundImage && (
+            <Image
+              src={figures.backgroundImage.src}
+              alt={figures.backgroundImage.alt}
+              fill
+              style={{ objectFit: "cover" }}
+              className="absolute -inset-1 -z-1 opacity-40"
+            />
+          )}
         </div>
       </section>
 

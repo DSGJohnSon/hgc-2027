@@ -1,13 +1,9 @@
-import { getEvents, getServicesBtoB, getServicesBtoC } from "@/lib/content";
+import { getEvents } from "@/lib/content";
 
-
-
+// Les pages « Nos Services » sont volontairement absentes : ce sont des pages
+// d'attente, à ajouter ici au fur et à mesure de leur mise en ligne.
 export default async function sitemap() {
-  const [eventsData, servicesBtoB, servicesBtoC] = await Promise.all([
-    getEvents(),
-    getServicesBtoB(),
-    getServicesBtoC(),
-  ]);
+  const eventsData = await getEvents();
 
   const baseUrl = "https://holidaygeekcup.fr";
 
@@ -28,12 +24,6 @@ export default async function sitemap() {
       url: `${baseUrl}/evenements`,
       lastModified: new Date(),
       changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/nos-services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
       priority: 0.9,
     },
     {
@@ -69,14 +59,5 @@ export default async function sitemap() {
     priority: 0.8,
   }));
 
-  const servicePages = [...servicesBtoB, ...servicesBtoC]
-    .filter((service) => !service.isDraft)
-    .map((service) => ({
-      url: `${baseUrl}/nos-services/${service.id}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    }));
-
-  return [...staticPages, ...eventPages, ...servicePages];
+  return [...staticPages, ...eventPages];
 }

@@ -5,7 +5,6 @@ import { formatAdminURL } from 'payload/shared'
 import {
   GAMES_THUMBNAIL,
   PARTNERS_THUMBNAIL,
-  SERVICES_THUMBNAIL,
   getLatestNewsImage,
   getNextEventBanner,
 } from './dashboardData'
@@ -96,12 +95,6 @@ export const Dashboard = async ({ payload, user }: AdminViewServerProps) => {
           title="Événements"
         />
         <Card
-          href={url('/collections/services')}
-          image={SERVICES_THUMBNAIL}
-          linkLabel="Voir les services"
-          title="Services"
-        />
-        <Card
           href={url('/collections/actualites')}
           image={newsImage}
           linkLabel="Voir les actualités"
@@ -111,7 +104,7 @@ export const Dashboard = async ({ payload, user }: AdminViewServerProps) => {
 
       {/*
         Référentiels alimentant plusieurs contenus à la fois : les jeux servent
-        aux événements et aux services, les partenaires aux événements et aux
+        aux événements et à la page d'accueil, les partenaires aux événements et aux
         sections « Partenaires » des pages. Ils n'ont donc leur place ni dans les
         pages, ni dans l'administration.
       */}
@@ -134,12 +127,13 @@ export const Dashboard = async ({ payload, user }: AdminViewServerProps) => {
       </section>
 
       {/*
-        Seule page du site encore éditable : sa mise en page est fixe, seuls les
-        textes et les images changent.
+        Pages éditables du site : leur mise en page est fixe, seuls les textes,
+        les images et les listes changent.
       */}
       <section className="hgc-dash__section">
         <h2 className="hgc-dash__section-title">Pages du site web</h2>
         <div className="hgc-dash__shortcuts">
+          <Shortcut href={url('/globals/home-page')} label="Page Accueil" />
           <Shortcut
             href={url('/globals/collectivites-page')}
             label="Page Collectivités"

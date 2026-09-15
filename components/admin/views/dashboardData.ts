@@ -16,13 +16,6 @@ export const GAMES_THUMBNAIL = '/assets/payload/thumbnails/jeux-hgc.png'
 export const PARTNERS_THUMBNAIL = '/assets/payload/thumbnails/partners.png'
 
 /**
- * Visuel « Services » — provisoirement la vignette de Tournois Majeurs, en
- * attendant une image dédiée sur le modèle de celle des jeux.
- */
-export const SERVICES_THUMBNAIL =
-  '/assets/img/services/tournois-majeurs/thumbnail_tournois-majeurs.png'
-
-/**
  * Bannière mobile du **prochain** événement à venir.
  *
  * On ne prend pas le dernier événement créé : la migration ayant importé les dix

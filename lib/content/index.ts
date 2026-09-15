@@ -6,20 +6,12 @@ import type { Event } from '@/types/pages/detail-event'
 import type { EventSeries } from '@/types/event-series'
 import type { Actualities } from '@/types/pages/detail-actualites'
 import type { Game } from '@/types/games'
-import type { ServiceBtoB } from '@/types/pages/service-btob'
-import type { ServiceBtoC } from '@/types/pages/service-btoc'
 import type { CollectivitesPageData } from '@/types/pages/collectivites'
+import type { HomePageData } from '@/types/pages/home'
 
-import {
-  toActualite,
-  toCategory,
-  toEvent,
-  toEventSeries,
-  toGame,
-  toServiceBtoB,
-  toServiceBtoC,
-} from './mappers/entities'
+import { toActualite, toCategory, toEvent, toEventSeries, toGame } from './mappers/entities'
 import { toCollectivitesPage } from './mappers/collectivites'
+import { toHomePage } from './mappers/home'
 
 /**
  * Couche d'accès au contenu.
@@ -126,29 +118,13 @@ export const getActualites = cached(
   },
 )
 
-const getServiceDocs = cached('services', CACHE_TAGS.services, async () => {
-  const payload = await getPayloadClient()
-  const { docs } = await payload.find({ collection: 'services', limit: LIMIT, depth: DEPTH })
-  return docs
-})
-
-export const getServicesBtoB = async (): Promise<ServiceBtoB[]> => {
-  const docs = await getServiceDocs()
-  return docs.filter((doc) => doc.target === 'btob').map(toServiceBtoB)
-}
-
-export const getServicesBtoC = async (): Promise<ServiceBtoC[]> => {
-  const docs = await getServiceDocs()
-  return docs.filter((doc) => doc.target === 'btoc').map(toServiceBtoC)
-}
-
 
 // --------------------------------------------------------------------- globals
 
 /**
  * Page « collectivités ».
  *
- * Seule page du site encore pilotée depuis le backoffice : sa mise en page est
+ * Sa mise en page est
  * fixe, seuls les textes, les images et le nombre d'éléments des listes sont
  * modifiables (voir `payload/globals/Collectivites.ts`).
  */
@@ -159,5 +135,21 @@ export const getCollectivitesPage = cached(
     const payload = await getPayloadClient()
     const doc = await payload.findGlobal({ slug: 'collectivites-page', depth: DEPTH })
     return toCollectivitesPage(doc)
+  },
+)
+
+/**
+ * Page d'accueil « joueurs ».
+ *
+ * Même principe que la page collectivités : mise en page fixe, textes, images
+ * et listes modifiables (voir `payload/globals/Home.ts`).
+ */
+export const getHomePage = cached(
+  'home-page',
+  CACHE_TAGS.homePage,
+  async (): Promise<HomePageData> => {
+    const payload = await getPayloadClient()
+    const doc = await payload.findGlobal({ slug: 'home-page', depth: DEPTH })
+    return toHomePage(doc)
   },
 )

@@ -105,7 +105,7 @@ Pour tester en local sans compte, Cloudflare fournit des clés de test :
 
 ## 🗂️ Backoffice (Payload CMS)
 
-Le contenu du site — textes, images, événements, services, menus — se modifie depuis
+Le contenu du site — textes, images, événements, menus — se modifie depuis
 `/admin`, sans passer par le code ni par un redéploiement.
 
 ### Démarrage en local
@@ -129,7 +129,7 @@ npm run seed                     # importe le contenu de data/ dans la base
 | Dossier | Rôle |
 |---|---|
 | `payload.config.ts` | configuration : collections, globals, base, stockage |
-| `payload/collections/` | contenus en liste (événements, séries, services, actualités, jeux, catégories, médias, comptes) |
+| `payload/collections/` | contenus en liste (événements, séries, actualités, jeux, catégories, médias, comptes) |
 | `payload/globals/` | contenus uniques (accueil, à propos, contact, documents, en-tête, pied de page) |
 | `payload/blocks/` | blocs de contenu réutilisables, miroir des types de `types/` |
 | `payload/fields/` | champs partagés (image, slug, transports…) |
@@ -160,7 +160,7 @@ npm run seed                       # tout
 npm run seed -- --only=events      # une étape
 ```
 
-Étapes : `referentials`, `globals`, `actualites`, `events`, `services`.
+Étapes : `referentials`, `globals`, `actualites`, `events`.
 Le script est **rejouable** : il met à jour les documents existants (identifiés par leur
 slug) au lieu de les dupliquer. Les fichiers `data/` restent dans le repo comme source de
 secours tant que le contenu migré n'a pas été validé.
@@ -174,7 +174,7 @@ secours tant que le contenu migré n'a pas été validé.
 | `BLOB_READ_WRITE_TOKEN` | Vercel | requis pour les images envoyées depuis le backoffice |
 | `PAYLOAD_SERVER_URL` | Vercel | `https://holidaygeekcup.fr` |
 
-`DATABASE_URL` est également nécessaire **au build** : les pages Services sont
-pré-générées à partir de la base.
+`DATABASE_URL` est également nécessaire **au build** : le sitemap lit la liste des
+événements dans la base.
 
 Voir `docs/plan-backoffice.md` pour les décisions d'architecture.

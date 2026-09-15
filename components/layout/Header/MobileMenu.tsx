@@ -13,6 +13,7 @@ interface MobileMenuProps {
   onClose: () => void;
   menuItems: MenuItemData[];
   logo: ImageData;
+  homeHref?: string;
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
@@ -20,6 +21,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   onClose,
   menuItems,
   logo,
+  homeHref = "/",
 }) => {
   return (
     <>
@@ -50,7 +52,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             >
               <LuX className="w-full h-full" />
             </button>
-            <Link href="/" onClick={onClose}>
+            <Link href={homeHref} onClick={onClose}>
               <Image
                 src={logo.src}
                 alt={logo.alt}
@@ -61,10 +63,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             </Link>
           </div>
 
-          {/* Bascule joueurs / collectivités */}
-          <div className="flex justify-center border-b border-white/10 py-4">
-            <AudienceSwitch onNavigate={onClose} />
-          </div>
+          {/* Bascule joueurs / collectivités : rien n'est rendu (donc pas de
+              bande vide) quand AudienceSwitch n'est pas sur une page d'accueil. */}
+          <AudienceSwitch
+            onNavigate={onClose}
+            className="w-full justify-center border-b border-white/10 py-4"
+          />
 
           {/* Menu Items */}
           <nav className="p-6">

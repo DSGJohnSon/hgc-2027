@@ -13,7 +13,7 @@ interface MainMenuProps {
 
 const MainMenu: React.FC<MainMenuProps> = ({ menuItems }) => {
   return (
-    <nav className="hidden lg:inline-block ml-0 xl:ml-35">
+    <nav className="hidden xl:inline-block ml-0 xl:ml-35">
       <ul className="m-0 p-0">
         {menuItems.map((item) => (
           <MenuItem key={item.label} item={item} />

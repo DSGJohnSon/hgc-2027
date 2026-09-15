@@ -2,8 +2,8 @@ import React from "react";
 import MainHero from "./MainHero";
 import PixelBackground from "@/components/ui/pixel-background";
 import { LuChevronDown } from "react-icons/lu";
-import { EventCard } from "@/types/pages/detail-event";
 import Image from "next/image";
+import type { ImageData } from "@/types";
 
 export interface HeroData {
   mainHero: {
@@ -19,6 +19,9 @@ export interface HeroData {
       textUpperCase?: boolean;
     }>;
     totalParticipants: string;
+    participantsSince?: number;
+    /** Absente tant qu'aucune image n'est renseignée dans le backoffice. */
+    backgroundImage?: ImageData;
   };
 }
 
@@ -56,6 +59,7 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
             }>
           }
           totalParticipants={data.mainHero.totalParticipants}
+          year={data.mainHero.participantsSince}
         />
         {/* Scroll Indicator - Absolute positioned at bottom, outside container */}
         <div className="absolute -bottom-20 sm:-bottom-32 left-1/2 -translate-x-1/2 z-10 animate-fade-in-up animation-delay-600 flex flex-col items-center gap-2">
@@ -69,12 +73,14 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
         {/* Image BG */}
       </PixelBackground>
       <div className="absolute top-0 left-0 w-full lg:aspect-video h-[50%] lg:h-auto opacity-10 z-5">
-        <Image
-          src={"/assets/img/heros/hero_main.png"}
-          alt="Hero BG"
-          fill
-          className="object-cover pointer-events-none select-none -z-10"
-        />
+        {data.mainHero.backgroundImage && (
+          <Image
+            src={data.mainHero.backgroundImage.src}
+            alt={data.mainHero.backgroundImage.alt}
+            fill
+            className="object-cover pointer-events-none select-none -z-10"
+          />
+        )}
         <div className="bg-linear-to-t from-gray-950 to-transparent absolute bottom-0 left-0 w-full h-1/3"></div>
       </div>
     </section>

@@ -83,10 +83,10 @@ export const revalidateManyOnDelete =
 export const CACHE_TAGS = {
   events: 'events',
   eventSeries: 'event-series',
-  services: 'services',
   actualites: 'actualites',
   games: 'games',
   categories: 'categories',
   partners: 'partners',
   collectivitesPage: 'collectivites-page',
+  homePage: 'home-page',
 } as const

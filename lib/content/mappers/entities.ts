@@ -2,10 +2,8 @@ import type { Event } from '@/types/pages/detail-event'
 import type { EventSeries, SeriesDate } from '@/types/event-series'
 import type { Actualities } from '@/types/pages/detail-actualites'
 import type { Game } from '@/types/games'
-import type { ServiceBtoB } from '@/types/pages/service-btob'
-import type { ServiceBtoC } from '@/types/pages/service-btoc'
 
-import { toDescription, toServiceContent, toTextContent } from './blocks'
+import { toDescription, toTextContent } from './blocks'
 import {
   compact,
   flatten,
@@ -13,12 +11,11 @@ import {
   toDateString,
   toPositionedImage,
   toSlugs,
-  toStats,
   type Raw,
 } from './common'
 
 /**
- * Logos de partenaires — `{ alt, src }`.
+ * Logo d'un partenaire — `{ alt, src }`.
  *
  * Les partenaires sont désormais une collection à part, référencée par relation.
  * Selon la profondeur de la requête, Payload renvoie soit le document peuplé,
@@ -26,23 +23,25 @@ import {
  * permettant pas d'afficher un logo. Le nom du partenaire sert de texte
  * alternatif, ce qui garantit sa cohérence partout où le logo apparaît.
  */
-export const toPartners = (relations: unknown): Array<{ alt: string; src: string }> => {
-  if (!Array.isArray(relations)) return []
-
-  return relations
-    .map((relation) => {
-      if (!relation || typeof relation !== 'object') return undefined
-      const partner = relation as Raw
-      // Le logo est un média de la bibliothèque : sans fichier envoyé, il n'y a
-      // rien à afficher et le partenaire est simplement omis.
-      const logo = partner.logo
-      const src =
-        logo && typeof logo === 'object' && typeof logo.url === 'string' ? logo.url : undefined
-      if (!src) return undefined
-      return { alt: String(partner.name ?? ''), src }
-    })
-    .filter((partner): partner is { alt: string; src: string } => Boolean(partner))
+export const toPartner = (
+  relation: unknown,
+): { alt: string; src: string } | undefined => {
+  if (!relation || typeof relation !== 'object') return undefined
+  const partner = relation as Raw
+  // Le logo est un média de la bibliothèque : sans fichier envoyé, il n'y a rien
+  // à afficher et le partenaire est simplement omis.
+  const src = resolveImage({ media: partner.logo })
+  if (!src) return undefined
+  return { alt: String(partner.name ?? ''), src }
 }
+
+/** Liste de logos de partenaires, en écartant ceux qui n'ont pas de fichier. */
+export const toPartners = (relations: unknown): Array<{ alt: string; src: string }> =>
+  Array.isArray(relations)
+    ? relations
+        .map(toPartner)
+        .filter((partner): partner is { alt: string; src: string } => Boolean(partner))
+    : []
 
 /** Accès en transports : on n'expose que les modes réellement renseignés. */
 const toTransports = (transports: Raw | null | undefined): Event['transports'] => {
@@ -191,34 +190,3 @@ export const toCategory = (doc: Raw) =>
     name: String(doc.name ?? ''),
     color: doc.color || undefined,
   })
-
-const toServiceBase = (doc: Raw) => ({
-  id: String(doc.slug ?? ''),
-  title: String(doc.title ?? ''),
-  tagline: doc.tagline || undefined,
-  logo: resolveImage(doc.logo),
-  color: String(doc.color ?? '#6240cf'),
-  cardThumbnail: resolveImage(doc.cardThumbnail) ?? '',
-  heroBanner: resolveImage(doc.heroBanner) ?? '',
-  heroBannerMobile: resolveImage(doc.heroBannerMobile) ?? '',
-  shortDescription: String(doc.shortDescription ?? ''),
-  content: toServiceContent(doc.content),
-  isDraft: Boolean(doc.isDraft),
-})
-
-/** Service à destination des collectivités. */
-export const toServiceBtoB = (doc: Raw): ServiceBtoB =>
-  compact({
-    ...toServiceBase(doc),
-    target: 'btob',
-    stats: Array.isArray(doc.stats) && doc.stats.length > 0 ? toStats(doc.stats) : undefined,
-    formProjectLabel: doc.formProjectLabel || undefined,
-  }) as ServiceBtoB
-
-/** Service à destination des particuliers. */
-export const toServiceBtoC = (doc: Raw): ServiceBtoC =>
-  compact({
-    ...toServiceBase(doc),
-    target: 'btoc',
-    helloAssoEmbed: doc.helloAssoEmbed || undefined,
-  }) as ServiceBtoC

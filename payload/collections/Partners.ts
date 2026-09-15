@@ -3,14 +3,14 @@ import type { CollectionConfig } from 'payload'
 import { anyone, isEditor } from '../access'
 import { CACHE_TAGS, revalidateMany, revalidateManyOnDelete } from '../hooks/revalidate'
 
-// Un partenaire est intégré au rendu des événements et des séries : son cache
-// propre ne suffit pas. Les pages éditoriales, elles, ne passent plus par le CMS
-// (leurs logos sont figés dans le code), elles n’ont donc plus de tag à invalider.
+// Un partenaire est intégré au rendu des événements, des séries et des pages
+// d’accueil (joueurs et collectivités) : son cache propre ne suffit pas.
 const AFFECTED_TAGS = [
   CACHE_TAGS.partners,
   CACHE_TAGS.events,
   CACHE_TAGS.eventSeries,
   CACHE_TAGS.collectivitesPage,
+  CACHE_TAGS.homePage,
 ]
 
 /**

@@ -69,7 +69,6 @@ export interface Config {
   collections: {
     events: Event;
     'event-series': EventSery;
-    services: Service;
     actualites: Actualite;
     games: Game;
     categories: Category;
@@ -90,7 +89,6 @@ export interface Config {
   collectionsSelect: {
     events: EventsSelect<false> | EventsSelect<true>;
     'event-series': EventSeriesSelect<false> | EventSeriesSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
     actualites: ActualitesSelect<false> | ActualitesSelect<true>;
     games: GamesSelect<false> | GamesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
@@ -108,9 +106,11 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    'home-page': HomePage;
     'collectivites-page': CollectivitesPage;
   };
   globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'collectivites-page': CollectivitesPageSelect<false> | CollectivitesPageSelect<true>;
   };
   locale: null;
@@ -891,337 +891,6 @@ export interface EventSery {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Pages de l’offre : collectivités (BtoB) et particuliers (BtoC).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
- */
-export interface Service {
-  id: string;
-  /**
-   * Adresse de la page : /nos-services/<identifiant>.
-   */
-  slug: string;
-  /**
-   * Détermine le gabarit de la page et la section du hub.
-   */
-  target: 'btob' | 'btoc';
-  /**
-   * À cocher tant que le contenu définitif n’a pas été fourni par l’association.
-   */
-  isDraft?: boolean | null;
-  title: string;
-  tagline?: string | null;
-  /**
-   * Utilisée sur la carte du hub et comme description pour les moteurs de recherche.
-   */
-  shortDescription: string;
-  color: string;
-  logo?: {
-    /**
-     * Envoyez une image pour remplacer celle d'origine.
-     */
-    media?: (string | null) | Media;
-    /**
-     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-     */
-    path?: string | null;
-  };
-  cardThumbnail?: {
-    /**
-     * Envoyez une image pour remplacer celle d'origine.
-     */
-    media?: (string | null) | Media;
-    /**
-     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-     */
-    path?: string | null;
-    /**
-     * Décrit l'image pour l'accessibilité et le référencement.
-     */
-    alt?: string | null;
-  };
-  heroBanner?: {
-    /**
-     * Envoyez une image pour remplacer celle d'origine.
-     */
-    media?: (string | null) | Media;
-    /**
-     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-     */
-    path?: string | null;
-    /**
-     * Décrit l'image pour l'accessibilité et le référencement.
-     */
-    alt?: string | null;
-  };
-  heroBannerMobile?: {
-    /**
-     * Envoyez une image pour remplacer celle d'origine.
-     */
-    media?: (string | null) | Media;
-    /**
-     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-     */
-    path?: string | null;
-    /**
-     * Décrit l'image pour l'accessibilité et le référencement.
-     */
-    alt?: string | null;
-  };
-  /**
-   * Affichés dans le hero de la page.
-   */
-  stats?:
-    | {
-        value: number;
-        type?: ('number' | 'euros') | null;
-        plus?: boolean | null;
-        label: string;
-        sublabel?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  content?:
-    | (
-        | {
-            content?:
-              | (
-                  | {
-                      title: string;
-                      id?: string | null;
-                      blockName?: string | null;
-                      blockType: 'title';
-                    }
-                  | {
-                      paragraphs?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      id?: string | null;
-                      blockName?: string | null;
-                      blockType: 'paragraph';
-                    }
-                  | {
-                      items?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      id?: string | null;
-                      blockName?: string | null;
-                      blockType: 'list';
-                    }
-                  | {
-                      citationText: string;
-                      id?: string | null;
-                      blockName?: string | null;
-                      blockType: 'citation';
-                    }
-                )[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            stats?:
-              | {
-                  value: number;
-                  type?: ('number' | 'euros') | null;
-                  plus?: boolean | null;
-                  label: string;
-                  sublabel?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'statistics';
-          }
-        | {
-            title?: string | null;
-            subtitle?: string | null;
-            images?:
-              | {
-                  image?: {
-                    /**
-                     * Envoyez une image pour remplacer celle d'origine.
-                     */
-                    media?: (string | null) | Media;
-                    /**
-                     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-                     */
-                    path?: string | null;
-                    /**
-                     * Décrit l'image pour l'accessibilité et le référencement.
-                     */
-                    alt?: string | null;
-                  };
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'gallery';
-          }
-        | {
-            title?: string | null;
-            text?:
-              | {
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            image?: {
-              /**
-               * Envoyez une image pour remplacer celle d'origine.
-               */
-              media?: (string | null) | Media;
-              /**
-               * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-               */
-              path?: string | null;
-              /**
-               * Décrit l'image pour l'accessibilité et le référencement.
-               */
-              alt?: string | null;
-            };
-            reverse?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'imageText';
-          }
-        | {
-            title?: string | null;
-            buckets?:
-              | {
-                  label: string;
-                  percent: number;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'ageDistribution';
-          }
-        | {
-            cityTitle?: string | null;
-            hgcTitle?: string | null;
-            cityItems?:
-              | {
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            hgcItems?:
-              | {
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'roleSplit';
-          }
-        | {
-            title?: string | null;
-            text: string;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'highlight';
-          }
-        | {
-            title?: string | null;
-            speakers?:
-              | {
-                  name: string;
-                  role: string;
-                  photo?: {
-                    /**
-                     * Envoyez une image pour remplacer celle d'origine.
-                     */
-                    media?: (string | null) | Media;
-                    /**
-                     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-                     */
-                    path?: string | null;
-                  };
-                  linkedin?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'speakers';
-          }
-        | {
-            title?: string | null;
-            items?:
-              | {
-                  title: string;
-                  description?: string | null;
-                  /**
-                   * Emoji ou nom de l’icône.
-                   */
-                  icon?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'themes';
-          }
-        | {
-            title?: string | null;
-            subtitle?: string | null;
-            games?: (string | Game)[] | null;
-            randomize?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'games';
-          }
-        | {
-            title?: string | null;
-            items?:
-              | {
-                  label: string;
-                  icon?: string | null;
-                  image?: {
-                    /**
-                     * Envoyez une image pour remplacer celle d'origine.
-                     */
-                    media?: (string | null) | Media;
-                    /**
-                     * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-                     */
-                    path?: string | null;
-                  };
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'equipment';
-          }
-      )[]
-    | null;
-  /**
-   * Valeur pré-remplie dans le formulaire de demande. Par défaut, le titre du service.
-   */
-  formProjectLabel?: string | null;
-  /**
-   * Widget de réservation affiché en bas de page.
-   */
-  helloAssoEmbed?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
  * Annonces mises en avant sur la page d’accueil.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1359,10 +1028,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'event-series';
         value: string | EventSery;
-      } | null)
-    | ({
-        relationTo: 'services';
-        value: string | Service;
       } | null)
     | ({
         relationTo: 'actualites';
@@ -1935,278 +1600,6 @@ export interface EventSeriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
- */
-export interface ServicesSelect<T extends boolean = true> {
-  slug?: T;
-  target?: T;
-  isDraft?: T;
-  title?: T;
-  tagline?: T;
-  shortDescription?: T;
-  color?: T;
-  logo?:
-    | T
-    | {
-        media?: T;
-        path?: T;
-      };
-  cardThumbnail?:
-    | T
-    | {
-        media?: T;
-        path?: T;
-        alt?: T;
-      };
-  heroBanner?:
-    | T
-    | {
-        media?: T;
-        path?: T;
-        alt?: T;
-      };
-  heroBannerMobile?:
-    | T
-    | {
-        media?: T;
-        path?: T;
-        alt?: T;
-      };
-  stats?:
-    | T
-    | {
-        value?: T;
-        type?: T;
-        plus?: T;
-        label?: T;
-        sublabel?: T;
-        id?: T;
-      };
-  content?:
-    | T
-    | {
-        text?:
-          | T
-          | {
-              content?:
-                | T
-                | {
-                    title?:
-                      | T
-                      | {
-                          title?: T;
-                          id?: T;
-                          blockName?: T;
-                        };
-                    paragraph?:
-                      | T
-                      | {
-                          paragraphs?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
-                          id?: T;
-                          blockName?: T;
-                        };
-                    list?:
-                      | T
-                      | {
-                          items?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
-                          id?: T;
-                          blockName?: T;
-                        };
-                    citation?:
-                      | T
-                      | {
-                          citationText?: T;
-                          id?: T;
-                          blockName?: T;
-                        };
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        statistics?:
-          | T
-          | {
-              stats?:
-                | T
-                | {
-                    value?: T;
-                    type?: T;
-                    plus?: T;
-                    label?: T;
-                    sublabel?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        gallery?:
-          | T
-          | {
-              title?: T;
-              subtitle?: T;
-              images?:
-                | T
-                | {
-                    image?:
-                      | T
-                      | {
-                          media?: T;
-                          path?: T;
-                          alt?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        imageText?:
-          | T
-          | {
-              title?: T;
-              text?:
-                | T
-                | {
-                    value?: T;
-                    id?: T;
-                  };
-              image?:
-                | T
-                | {
-                    media?: T;
-                    path?: T;
-                    alt?: T;
-                  };
-              reverse?: T;
-              id?: T;
-              blockName?: T;
-            };
-        ageDistribution?:
-          | T
-          | {
-              title?: T;
-              buckets?:
-                | T
-                | {
-                    label?: T;
-                    percent?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        roleSplit?:
-          | T
-          | {
-              cityTitle?: T;
-              hgcTitle?: T;
-              cityItems?:
-                | T
-                | {
-                    value?: T;
-                    id?: T;
-                  };
-              hgcItems?:
-                | T
-                | {
-                    value?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        highlight?:
-          | T
-          | {
-              title?: T;
-              text?: T;
-              id?: T;
-              blockName?: T;
-            };
-        speakers?:
-          | T
-          | {
-              title?: T;
-              speakers?:
-                | T
-                | {
-                    name?: T;
-                    role?: T;
-                    photo?:
-                      | T
-                      | {
-                          media?: T;
-                          path?: T;
-                        };
-                    linkedin?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        themes?:
-          | T
-          | {
-              title?: T;
-              items?:
-                | T
-                | {
-                    title?: T;
-                    description?: T;
-                    icon?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        games?:
-          | T
-          | {
-              title?: T;
-              subtitle?: T;
-              games?: T;
-              randomize?: T;
-              id?: T;
-              blockName?: T;
-            };
-        equipment?:
-          | T
-          | {
-              title?: T;
-              items?:
-                | T
-                | {
-                    label?: T;
-                    icon?: T;
-                    image?:
-                      | T
-                      | {
-                          media?: T;
-                          path?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-      };
-  formProjectLabel?: T;
-  helloAssoEmbed?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "actualites_select".
  */
 export interface ActualitesSelect<T extends boolean = true> {
@@ -2458,6 +1851,260 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Textes et images de la page d’accueil destinée aux joueurs (/).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: string;
+  hero?: {
+    /**
+     * Texte animé au-dessus du titre. Les espaces sont conservés.
+     */
+    subtitle?: string | null;
+    titleLine1?: string | null;
+    /**
+     * Affichée plus grande, dans la couleur d’accent.
+     */
+    titleLine2?: string | null;
+    /**
+     * Le premier bouton est mis en avant, le second est secondaire.
+     */
+    buttons?:
+      | {
+          label: string;
+          href: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Ex. « 80.000 ».
+     */
+    totalParticipants?: string | null;
+    /**
+     * Affiché dans « visiteurs/participants depuis … ».
+     */
+    participantsSince?: number | null;
+    /**
+     * Visuel très atténué, affiché en haut du bandeau.
+     */
+    backgroundImage?: {
+      media?: (string | null) | Media;
+      /**
+       * Décrit l'image pour l'accessibilité et le référencement.
+       */
+      alt?: string | null;
+    };
+  };
+  gamingSpaces?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    /**
+     * Affichés par 3 sur une ligne à partir de la tablette.
+     */
+    cards?:
+      | {
+          logo?: {
+            media?: (string | null) | Media;
+            /**
+             * Décrit l'image pour l'accessibilité et le référencement.
+             */
+            alt?: string | null;
+          };
+          /**
+           * Affichée en transparence derrière le logo.
+           */
+          backgroundImage?: {
+            media?: (string | null) | Media;
+            /**
+             * Décrit l'image pour l'accessibilité et le référencement.
+             */
+            alt?: string | null;
+          };
+          text: string;
+          /**
+           * La carte reste affichée, mais grisée et accompagnée de la mention « Indisponible pour le moment ».
+           */
+          unavailable?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  games?: {
+    title?: string | null;
+    intro?: string | null;
+    /**
+     * Sélectionnez les jeux dans le référentiel (Référentiels → Jeux), dans l’ordre d’affichage. Chaque carte mène aux événements filtrés sur ce jeu.
+     */
+    selection?: (string | Game)[] | null;
+  };
+  howItWorks?: {
+    title?: string | null;
+    steps?:
+      | {
+          /**
+           * Sans icône, un pictogramme calendrier est affiché. Privilégiez une icône blanche.
+           */
+          icon?: {
+            media?: (string | null) | Media;
+            /**
+             * Décrit l'image pour l'accessibilité et le référencement.
+             */
+            alt?: string | null;
+          };
+          /**
+           * Numéro compris, ex. « 1. Choisis ton event ».
+           */
+          title: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  whyJoin?: {
+    title?: string | null;
+    /**
+     * Affichés par 4 sur une ligne sur PC.
+     */
+    cards?:
+      | {
+          /**
+           * Visible sur PC uniquement, avant le survol.
+           */
+          image?: {
+            media?: (string | null) | Media;
+            /**
+             * Décrit l'image pour l'accessibilité et le référencement.
+             */
+            alt?: string | null;
+          };
+          /**
+           * Seule illustration affichée sur mobile.
+           */
+          hoverImage?: {
+            media?: (string | null) | Media;
+            /**
+             * Décrit l'image pour l'accessibilité et le référencement.
+             */
+            alt?: string | null;
+          };
+          titleStart: string;
+          titleAccent: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  figures?: {
+    title?: string | null;
+    /**
+     * Affiché en première position, devant les chiffres.
+     */
+    logo?: {
+      media?: (string | null) | Media;
+      /**
+       * Décrit l'image pour l'accessibilité et le référencement.
+       */
+      alt?: string | null;
+    };
+    backgroundImage?: {
+      media?: (string | null) | Media;
+      /**
+       * Décrit l'image pour l'accessibilité et le référencement.
+       */
+      alt?: string | null;
+    };
+    /**
+     * Chaque chiffre est animé au défilement, de 0 jusqu’à la valeur indiquée.
+     */
+    items?:
+      | {
+          value: number;
+          /**
+           * Ex. 1 pour afficher « 10,3 ».
+           */
+          decimals?: number | null;
+          /**
+           * Ex. « + de ».
+           */
+          prefix?: string | null;
+          /**
+           * Ex. « k » ou « k€ ».
+           */
+          suffix?: string | null;
+          label: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  community?: {
+    title?: string | null;
+    /**
+     * Ex. « HGC ».
+     */
+    accent?: string | null;
+    text?: string | null;
+    /**
+     * Détourée, affichée à droite sur PC et sous le texte sur mobile.
+     */
+    photo?: {
+      media?: (string | null) | Media;
+      /**
+       * Décrit l'image pour l'accessibilité et le référencement.
+       */
+      alt?: string | null;
+    };
+    backgroundImage?: {
+      media?: (string | null) | Media;
+      /**
+       * Décrit l'image pour l'accessibilité et le référencement.
+       */
+      alt?: string | null;
+    };
+    socials?:
+      | {
+          network: 'discord' | 'instagram' | 'facebook' | 'tiktok' | 'youtube';
+          url: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  cta: {
+    titleAccent?: string | null;
+    title?: string | null;
+    button: {
+      label: string;
+      href: string;
+      id?: string | null;
+    };
+  };
+  partners?: {
+    subtitle?: string | null;
+    title?: string | null;
+    /**
+     * Sélectionnez les partenaires dans le référentiel (Référentiels → Partenaires). Seuls ceux dont le logo a été envoyé apparaissent sur la page.
+     */
+    selection?: (string | Partner)[] | null;
+  };
+  /**
+   * Titre et description affichés par Google et lors du partage sur les réseaux sociaux.
+   */
+  seo?: {
+    /**
+     * Environ 60 caractères.
+     */
+    title?: string | null;
+    /**
+     * Environ 155 caractères.
+     */
+    description?: string | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Textes et images de la page d’accueil destinée aux collectivités (/collectivites).
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2474,6 +2121,16 @@ export interface CollectivitesPage {
      */
     titleLine3Accent?: string | null;
     intro?: string | null;
+    /**
+     * Visuel affiché en arrière-plan du bandeau, sous un dégradé sombre.
+     */
+    backgroundImage?: {
+      media?: (string | null) | Media;
+      /**
+       * Décrit l'image pour l'accessibilité et le référencement.
+       */
+      alt?: string | null;
+    };
     /**
      * Le premier bouton est mis en avant, le second est secondaire.
      */
@@ -2501,14 +2158,7 @@ export interface CollectivitesPage {
            * Si une icône est fournie, elle remplace la valeur chiffrée.
            */
           icon?: {
-            /**
-             * Envoyez une image pour remplacer celle d'origine.
-             */
             media?: (string | null) | Media;
-            /**
-             * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-             */
-            path?: string | null;
             /**
              * Décrit l'image pour l'accessibilité et le référencement.
              */
@@ -2518,36 +2168,12 @@ export interface CollectivitesPage {
         }[]
       | null;
     /**
-     * Visuel affiché en arrière-plan du bandeau, sous un dégradé sombre.
-     */
-    backgroundImage?: {
-      /**
-       * Envoyez une image pour remplacer celle d'origine.
-       */
-      media?: (string | null) | Media;
-      /**
-       * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-       */
-      path?: string | null;
-      /**
-       * Décrit l'image pour l'accessibilité et le référencement.
-       */
-      alt?: string | null;
-    };
-    /**
      * Bandeau de photos défilant sous le titre. Comptez au moins 4 visuels pour un défilement fluide.
      */
     sliderImages?:
       | {
           image?: {
-            /**
-             * Envoyez une image pour remplacer celle d'origine.
-             */
             media?: (string | null) | Media;
-            /**
-             * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-             */
-            path?: string | null;
             /**
              * Décrit l'image pour l'accessibilité et le référencement.
              */
@@ -2566,14 +2192,7 @@ export interface CollectivitesPage {
     cards?:
       | {
           image?: {
-            /**
-             * Envoyez une image pour remplacer celle d'origine.
-             */
             media?: (string | null) | Media;
-            /**
-             * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-             */
-            path?: string | null;
             /**
              * Décrit l'image pour l'accessibilité et le référencement.
              */
@@ -2582,10 +2201,6 @@ export interface CollectivitesPage {
           titleStart: string;
           titleAccent: string;
           text: string;
-          /**
-           * Ajuste le zoom de l’image dans son cadre. À régler si le sujet est mal centré après un remplacement.
-           */
-          framing?: ('normal' | 'reduit' | 'tresReduit') | null;
           id?: string | null;
         }[]
       | null;
@@ -2593,14 +2208,7 @@ export interface CollectivitesPage {
   figures?: {
     title?: string | null;
     backgroundImage?: {
-      /**
-       * Envoyez une image pour remplacer celle d'origine.
-       */
       media?: (string | null) | Media;
-      /**
-       * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-       */
-      path?: string | null;
       /**
        * Décrit l'image pour l'accessibilité et le référencement.
        */
@@ -2634,14 +2242,7 @@ export interface CollectivitesPage {
     cards?:
       | {
           image?: {
-            /**
-             * Envoyez une image pour remplacer celle d'origine.
-             */
             media?: (string | null) | Media;
-            /**
-             * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-             */
-            path?: string | null;
             /**
              * Décrit l'image pour l'accessibilité et le référencement.
              */
@@ -2651,14 +2252,7 @@ export interface CollectivitesPage {
            * Petite icône ronde en haut à gauche de la carte.
            */
           icon?: {
-            /**
-             * Envoyez une image pour remplacer celle d'origine.
-             */
             media?: (string | null) | Media;
-            /**
-             * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-             */
-            path?: string | null;
             /**
              * Décrit l'image pour l'accessibilité et le référencement.
              */
@@ -2685,20 +2279,10 @@ export interface CollectivitesPage {
     items?:
       | {
           quote: string;
-          authorLogo?: {
-            /**
-             * Envoyez une image pour remplacer celle d'origine.
-             */
-            media?: (string | null) | Media;
-            /**
-             * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-             */
-            path?: string | null;
-            /**
-             * Décrit l'image pour l'accessibilité et le référencement.
-             */
-            alt?: string | null;
-          };
+          /**
+           * Choisissez la collectivité dans le référentiel (Référentiels → Partenaires). Son logo et son nom servent de visuel et de texte alternatif ; tant qu’aucune n’est choisie, le témoignage s’affiche sans logo.
+           */
+          partner?: (string | null) | Partner;
           authorName: string;
           eventLabel?: string | null;
           id?: string | null;
@@ -2709,7 +2293,7 @@ export interface CollectivitesPage {
     subtitle?: string | null;
     title?: string | null;
     /**
-     * Sélectionnez les partenaires dans le référentiel (Référentiels → Partenaires). Tant que rien n’est sélectionné, la liste actuellement en ligne reste affichée.
+     * Sélectionnez les partenaires dans le référentiel (Référentiels → Partenaires). Seuls ceux dont le logo a été envoyé apparaissent sur la page.
      */
     selection?: (string | Partner)[] | null;
   };
@@ -2732,6 +2316,192 @@ export interface CollectivitesPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        subtitle?: T;
+        titleLine1?: T;
+        titleLine2?: T;
+        buttons?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              id?: T;
+            };
+        totalParticipants?: T;
+        participantsSince?: T;
+        backgroundImage?:
+          | T
+          | {
+              media?: T;
+              alt?: T;
+            };
+      };
+  gamingSpaces?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        cards?:
+          | T
+          | {
+              logo?:
+                | T
+                | {
+                    media?: T;
+                    alt?: T;
+                  };
+              backgroundImage?:
+                | T
+                | {
+                    media?: T;
+                    alt?: T;
+                  };
+              text?: T;
+              unavailable?: T;
+              id?: T;
+            };
+      };
+  games?:
+    | T
+    | {
+        title?: T;
+        intro?: T;
+        selection?: T;
+      };
+  howItWorks?:
+    | T
+    | {
+        title?: T;
+        steps?:
+          | T
+          | {
+              icon?:
+                | T
+                | {
+                    media?: T;
+                    alt?: T;
+                  };
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  whyJoin?:
+    | T
+    | {
+        title?: T;
+        cards?:
+          | T
+          | {
+              image?:
+                | T
+                | {
+                    media?: T;
+                    alt?: T;
+                  };
+              hoverImage?:
+                | T
+                | {
+                    media?: T;
+                    alt?: T;
+                  };
+              titleStart?: T;
+              titleAccent?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  figures?:
+    | T
+    | {
+        title?: T;
+        logo?:
+          | T
+          | {
+              media?: T;
+              alt?: T;
+            };
+        backgroundImage?:
+          | T
+          | {
+              media?: T;
+              alt?: T;
+            };
+        items?:
+          | T
+          | {
+              value?: T;
+              decimals?: T;
+              prefix?: T;
+              suffix?: T;
+              label?: T;
+              id?: T;
+            };
+      };
+  community?:
+    | T
+    | {
+        title?: T;
+        accent?: T;
+        text?: T;
+        photo?:
+          | T
+          | {
+              media?: T;
+              alt?: T;
+            };
+        backgroundImage?:
+          | T
+          | {
+              media?: T;
+              alt?: T;
+            };
+        socials?:
+          | T
+          | {
+              network?: T;
+              url?: T;
+              id?: T;
+            };
+      };
+  cta?:
+    | T
+    | {
+        titleAccent?: T;
+        title?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              id?: T;
+            };
+      };
+  partners?:
+    | T
+    | {
+        subtitle?: T;
+        title?: T;
+        selection?: T;
+      };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collectivites-page_select".
  */
 export interface CollectivitesPageSelect<T extends boolean = true> {
@@ -2743,6 +2513,12 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
         titleLine3Start?: T;
         titleLine3Accent?: T;
         intro?: T;
+        backgroundImage?:
+          | T
+          | {
+              media?: T;
+              alt?: T;
+            };
         buttons?:
           | T
           | {
@@ -2759,17 +2535,9 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
                 | T
                 | {
                     media?: T;
-                    path?: T;
                     alt?: T;
                   };
               id?: T;
-            };
-        backgroundImage?:
-          | T
-          | {
-              media?: T;
-              path?: T;
-              alt?: T;
             };
         sliderImages?:
           | T
@@ -2778,7 +2546,6 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
                 | T
                 | {
                     media?: T;
-                    path?: T;
                     alt?: T;
                   };
               id?: T;
@@ -2796,13 +2563,11 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
                 | T
                 | {
                     media?: T;
-                    path?: T;
                     alt?: T;
                   };
               titleStart?: T;
               titleAccent?: T;
               text?: T;
-              framing?: T;
               id?: T;
             };
       };
@@ -2814,7 +2579,6 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
           | T
           | {
               media?: T;
-              path?: T;
               alt?: T;
             };
         items?:
@@ -2839,14 +2603,12 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
                 | T
                 | {
                     media?: T;
-                    path?: T;
                     alt?: T;
                   };
               icon?:
                 | T
                 | {
                     media?: T;
-                    path?: T;
                     alt?: T;
                   };
               title?: T;
@@ -2871,13 +2633,7 @@ export interface CollectivitesPageSelect<T extends boolean = true> {
           | T
           | {
               quote?: T;
-              authorLogo?:
-                | T
-                | {
-                    media?: T;
-                    path?: T;
-                    alt?: T;
-                  };
+              partner?: T;
               authorName?: T;
               eventLabel?: T;
               id?: T;

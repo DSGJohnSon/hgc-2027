@@ -1,16 +1,42 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TopBar from "./TopBar";
 import Logo from "./Logo";
 import MainMenu from "./MainMenu";
 import MobileMenu from "./MobileMenu";
 import Button from "@/components/ui/Button";
-import { HeaderData } from "@/types";
+import { HeaderData, MenuItemData } from "@/types";
+import { useAudienceHomeHref } from "@/lib/use-audience-home";
+
+/**
+ * Le seul lien du menu qui pointe vers "/" est "Accueil" : on le fait suivre
+ * la page d'accueil de la version actuelle plutôt que de renvoyer, en dur,
+ * vers la version joueurs.
+ */
+const withHomeHref = (items: MenuItemData[], homeHref: string): MenuItemData[] =>
+  items.map((item) => ({
+    ...item,
+    href: item.href === "/" ? homeHref : item.href,
+    submenu: item.submenu ? withHomeHref(item.submenu, homeHref) : item.submenu,
+    mega: item.mega?.map((column) => ({
+      ...column,
+      links: column.links.map((link) => ({
+        ...link,
+        href: link.href === "/" ? homeHref : link.href,
+      })),
+    })),
+  }));
 
 const HeaderClient: React.FC<{ headerData: HeaderData }> = ({ headerData }) => {
   const [isSticky, setIsSticky] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const homeHref = useAudienceHomeHref();
+
+  const menuItems = useMemo(
+    () => withHomeHref(headerData.menu, homeHref),
+    [headerData.menu, homeHref],
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,15 +93,15 @@ const HeaderClient: React.FC<{ headerData: HeaderData }> = ({ headerData }) => {
               <div className="flex items-center justify-between px-4 sm:px-auto">
                 {/* Logo */}
                 <div className="relative z-20">
-                  <Logo logo={headerData.logo} />
+                  <Logo logo={headerData.logo} href={homeHref} />
                 </div>
 
                 {/* Navigation */}
                 <div className="flex items-center">
-                  <MainMenu menuItems={headerData.menu} />
+                  <MainMenu menuItems={menuItems} />
 
                   {/* Mobile Menu Toggle */}
-                  <div className="flex lg:hidden">
+                  <div className="flex xl:hidden">
                     <button
                       type="button"
                       onClick={() => setIsMobileMenuOpen(true)}
@@ -108,8 +134,9 @@ const HeaderClient: React.FC<{ headerData: HeaderData }> = ({ headerData }) => {
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        menuItems={headerData.menu}
+        menuItems={menuItems}
         logo={headerData.logo}
+        homeHref={homeHref}
       />
     </>
   );

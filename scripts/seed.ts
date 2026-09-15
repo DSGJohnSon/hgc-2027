@@ -4,7 +4,8 @@ import { getPayload } from 'payload'
 import config from '../payload.config'
 import { seedReferentials } from './seed/referentials'
 import { seedPartners } from './seed/partners'
-import { seedActualites, seedEvents, seedServices } from './seed/content'
+import { seedActualites, seedEvents } from './seed/content'
+import { seedHomePage } from './seed/home'
 
 /**
  * Migration du contenu des fichiers `data/` vers Payload.
@@ -16,9 +17,10 @@ import { seedActualites, seedEvents, seedServices } from './seed/content'
  *   npm run seed                    tout migrer
  *   npm run seed -- --only=events   ne migrer qu'une étape
  *
- * Étapes disponibles : referentials, partners, actualites, events, services.
- * L'ordre par défaut respecte les dépendances : les événements et les services
- * référencent les jeux, qui doivent donc exister d'abord.
+ * Étapes disponibles : referentials, partners, actualites, events, home.
+ * L'ordre par défaut respecte les dépendances : les événements référencent les
+ * jeux, qui doivent donc exister d'abord.
+ * La page d'accueil référence jeux et partenaires, elle passe donc en dernier.
  */
 
 const STEPS = {
@@ -26,7 +28,7 @@ const STEPS = {
   partners: seedPartners,
   actualites: seedActualites,
   events: seedEvents,
-  services: seedServices,
+  home: seedHomePage,
 } as const
 
 type StepName = keyof typeof STEPS
