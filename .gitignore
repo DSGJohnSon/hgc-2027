@@ -47,3 +47,7 @@ data/*.pdf
 
 # payload (uploads locaux quand Vercel Blob n'est pas configuré)
 /public/media/
+
+# sauvegardes de base (mongodump --archive) : elles contiennent les comptes et
+# leurs mots de passe chiffrés, elles ne doivent jamais être versionnées
+*.archive
