@@ -82,6 +82,9 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    'event-series': {
+      steps: 'events';
+    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
@@ -142,7 +145,7 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Événements et tournois ponctuels.
+ * Événements et tournois, ponctuels ou étapes d’une série.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events".
@@ -150,12 +153,16 @@ export interface UserAuthOperations {
 export interface Event {
   id: string;
   /**
-   * Adresse de la page : /evenements/<identifiant>.
+   * Adresse de la page : /evenements/<identifiant>, ou /evenements/<série>/<identifiant> pour une étape.
    */
   slug: string;
+  /**
+   * Rattache l’événement à une tournée, dont il devient une étape. Les visuels, la description, les jeux et les partenaires laissés vides reprennent ceux de la série.
+   */
+  series?: (string | null) | EventSery;
   title: string;
   type: 'tournoi' | 'event' | 'both';
-  color: string;
+  color?: string | null;
   startDate: string;
   /**
    * À renseigner uniquement si l’événement dure plusieurs jours.
@@ -214,6 +221,9 @@ export interface Event {
    * Sélectionnez les partenaires à afficher. Pour en ajouter un au catalogue, passez par Référentiels → Partenaires.
    */
   partners?: (string | Partner)[] | null;
+  /**
+   * Pour une étape de série, laissez vide pour reprendre la description de la série.
+   */
   description?:
     | (
         | {
@@ -371,157 +381,7 @@ export interface Event {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Images et fichiers utilisés dans le contenu du site.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  /**
-   * Décrit l'image pour les lecteurs d'écran et le référencement. Peut être surchargé à l'endroit où l'image est utilisée.
-   */
-  alt?: string | null;
-  credit?: string | null;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    banner?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-folders".
- */
-export interface FolderInterface {
-  id: string;
-  name: string;
-  folder?: (string | null) | FolderInterface;
-  documentsAndFolders?: {
-    docs?: (
-      | {
-          relationTo?: 'payload-folders';
-          value: string | FolderInterface;
-        }
-      | {
-          relationTo?: 'media';
-          value: string | Media;
-        }
-    )[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  folderType?: 'media'[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Logos des partenaires, réutilisables sur les événements et dans les sections « Partenaires ».
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners".
- */
-export interface Partner {
-  id: string;
-  /**
-   * Sert aussi de texte alternatif au logo, pour l’accessibilité et le référencement.
-   */
-  name: string;
-  /**
-   * Envoyez le logo depuis la bibliothèque de médias. Le nom du partenaire ci-dessus lui sert de texte alternatif. Tant qu’aucun logo n’est envoyé, le partenaire n’apparaît pas sur le site.
-   */
-  logo?: (string | null) | Media;
-  /**
-   * Facultatif. Non utilisé par le site aujourd’hui — les logos ne sont pas cliquables.
-   */
-  url?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Familles d'événements (Gaming House Tour, FIFA Season…).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: string;
-  /**
-   * Identifiant de la catégorie (ex. « gamingHouseTour »). Utilisé dans les filtres d'URL.
-   */
-  slug: string;
-  name: string;
-  color?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Catalogue des jeux proposés en tournoi et en free play.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "games".
- */
-export interface Game {
-  id: string;
-  /**
-   * Identifiant du jeu (ex. « fortnite »). Référencé par les événements.
-   */
-  slug: string;
-  name: string;
-  /**
-   * Une vignette illustrée nécessite un logo et des visuels ci-dessous.
-   */
-  blockType: 'block' | 'text';
-  bgType?: ('gradient' | 'color') | null;
-  color1?: string | null;
-  color2?: string | null;
-  logo?: {
-    media?: (string | null) | Media;
-  };
-  img?: {
-    media?: (string | null) | Media;
-  };
-  bgImg?: {
-    media?: (string | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Tournées et séries déclinées en plusieurs étapes.
+ * Tournées regroupant plusieurs événements, leurs étapes.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "event-series".
@@ -672,223 +532,171 @@ export interface EventSery {
           }
       )[]
     | null;
+  categories?: (string | Category)[] | null;
   games?: (string | Game)[] | null;
   freeplayGames?: (string | Game)[] | null;
+  randomizeFreeplayGames?: boolean | null;
   /**
-   * Chaque étape hérite des visuels et du contenu de la série ; ne remplissez que ce qui change.
+   * Événements rattachés à cette série. Pour ajouter une étape, créez un événement et choisissez cette série dans son champ « Série ».
    */
-  dates?:
-    | {
-        /**
-         * Adresse : /evenements/<série>/<identifiant d’étape>.
-         */
-        slug: string;
-        title?: string | null;
-        startDate: string;
-        endDate?: string | null;
-        startTime?: string | null;
-        endTime?: string | null;
-        location: string;
-        isCancelled?: boolean | null;
-        cardThumbnail?: {
-          /**
-           * Envoyez une image pour remplacer celle d'origine.
-           */
-          media?: (string | null) | Media;
-          /**
-           * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-           */
-          path?: string | null;
-          /**
-           * Décrit l'image pour l'accessibilité et le référencement.
-           */
-          alt?: string | null;
-        };
-        heroBanner?: {
-          /**
-           * Envoyez une image pour remplacer celle d'origine.
-           */
-          media?: (string | null) | Media;
-          /**
-           * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-           */
-          path?: string | null;
-          /**
-           * Décrit l'image pour l'accessibilité et le référencement.
-           */
-          alt?: string | null;
-        };
-        heroBannerMobile?: {
-          /**
-           * Envoyez une image pour remplacer celle d'origine.
-           */
-          media?: (string | null) | Media;
-          /**
-           * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-           */
-          path?: string | null;
-          /**
-           * Décrit l'image pour l'accessibilité et le référencement.
-           */
-          alt?: string | null;
-        };
-        description?:
-          | (
-              | {
-                  content?:
-                    | (
-                        | {
-                            title: string;
-                            id?: string | null;
-                            blockName?: string | null;
-                            blockType: 'title';
-                          }
-                        | {
-                            paragraphs?:
-                              | {
-                                  text: string;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            id?: string | null;
-                            blockName?: string | null;
-                            blockType: 'paragraph';
-                          }
-                        | {
-                            items?:
-                              | {
-                                  text: string;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            id?: string | null;
-                            blockName?: string | null;
-                            blockType: 'list';
-                          }
-                        | {
-                            citationText: string;
-                            id?: string | null;
-                            blockName?: string | null;
-                            blockType: 'citation';
-                          }
-                      )[]
-                    | null;
-                  id?: string | null;
-                  blockName?: string | null;
-                  blockType: 'text';
-                }
-              | {
-                  stats?:
-                    | {
-                        value: number;
-                        type?: ('number' | 'euros') | null;
-                        plus?: boolean | null;
-                        label: string;
-                        sublabel?: string | null;
-                        id?: string | null;
-                      }[]
-                    | null;
-                  id?: string | null;
-                  blockName?: string | null;
-                  blockType: 'statistics';
-                }
-              | {
-                  title?: string | null;
-                  subtitle?: string | null;
-                  images?:
-                    | {
-                        image?: {
-                          /**
-                           * Envoyez une image pour remplacer celle d'origine.
-                           */
-                          media?: (string | null) | Media;
-                          /**
-                           * Image d'origine du site (/assets/...). Ignorée dès qu'un fichier est envoyé ci-dessus.
-                           */
-                          path?: string | null;
-                          /**
-                           * Décrit l'image pour l'accessibilité et le référencement.
-                           */
-                          alt?: string | null;
-                        };
-                        id?: string | null;
-                      }[]
-                    | null;
-                  id?: string | null;
-                  blockName?: string | null;
-                  blockType: 'gallery';
-                }
-            )[]
-          | null;
-        /**
-         * Sélectionnez les partenaires à afficher. Pour en ajouter un au catalogue, passez par Référentiels → Partenaires.
-         */
-        partners?: (string | Partner)[] | null;
-        games?: (string | Game)[] | null;
-        freeplayGames?: (string | Game)[] | null;
-        registrationOpen?: boolean | null;
-        weezeventCode?: string | null;
-        /**
-         * Laisser vide si aucune information de transport n’est à afficher.
-         */
-        transports?: {
-          metro?:
-            | {
-                lines?:
-                  | {
-                      value: string;
-                      id?: string | null;
-                    }[]
-                  | null;
-                station: string;
-                walkTimeInMin: number;
-                id?: string | null;
-              }[]
-            | null;
-          bus?:
-            | {
-                lines?:
-                  | {
-                      value: string;
-                      id?: string | null;
-                    }[]
-                  | null;
-                station: string;
-                walkTimeInMin: number;
-                id?: string | null;
-              }[]
-            | null;
-          tramway?:
-            | {
-                lines?:
-                  | {
-                      value: string;
-                      id?: string | null;
-                    }[]
-                  | null;
-                station: string;
-                walkTimeInMin: number;
-                id?: string | null;
-              }[]
-            | null;
-          car?: {
-            parkings?:
-              | {
-                  name: string;
-                  address: string;
-                  distanceInMeters: number;
-                  walkTimeInMin: number;
-                  id?: string | null;
-                }[]
-              | null;
-          };
-        };
-        id?: string | null;
-      }[]
-    | null;
+  steps?: {
+    docs?: (string | Event)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Images et fichiers utilisés dans le contenu du site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  /**
+   * Décrit l'image pour les lecteurs d'écran et le référencement. Peut être surchargé à l'endroit où l'image est utilisée.
+   */
+  alt?: string | null;
+  credit?: string | null;
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    banner?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders".
+ */
+export interface FolderInterface {
+  id: string;
+  name: string;
+  folder?: (string | null) | FolderInterface;
+  documentsAndFolders?: {
+    docs?: (
+      | {
+          relationTo?: 'payload-folders';
+          value: string | FolderInterface;
+        }
+      | {
+          relationTo?: 'media';
+          value: string | Media;
+        }
+    )[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folderType?: 'media'[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Logos des partenaires, réutilisables sur les événements et dans les sections « Partenaires ».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: string;
+  /**
+   * Sert aussi de texte alternatif au logo, pour l’accessibilité et le référencement.
+   */
+  name: string;
+  /**
+   * Envoyez le logo depuis la bibliothèque de médias. Le nom du partenaire ci-dessus lui sert de texte alternatif. Tant qu’aucun logo n’est envoyé, le partenaire n’apparaît pas sur le site.
+   */
+  logo?: (string | null) | Media;
+  /**
+   * Facultatif. Non utilisé par le site aujourd’hui — les logos ne sont pas cliquables.
+   */
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Familles d'événements (Gaming House Tour, FIFA Season…).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: string;
+  /**
+   * Identifiant de la catégorie (ex. « gamingHouseTour »). Utilisé dans les filtres d'URL.
+   */
+  slug: string;
+  name: string;
+  color?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Catalogue des jeux proposés en tournoi et en free play.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "games".
+ */
+export interface Game {
+  id: string;
+  /**
+   * Identifiant du jeu (ex. « fortnite »). Référencé par les événements.
+   */
+  slug: string;
+  name: string;
+  /**
+   * Une vignette illustrée nécessite un logo et des visuels ci-dessous.
+   */
+  blockType: 'block' | 'text';
+  bgType?: ('gradient' | 'color') | null;
+  color1?: string | null;
+  color2?: string | null;
+  logo?: {
+    media?: (string | null) | Media;
+  };
+  img?: {
+    media?: (string | null) | Media;
+  };
+  bgImg?: {
+    media?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Annonces mises en avant sur la page d’accueil.
@@ -1105,6 +913,7 @@ export interface PayloadMigration {
  */
 export interface EventsSelect<T extends boolean = true> {
   slug?: T;
+  series?: T;
   title?: T;
   type?: T;
   color?: T;
@@ -1409,191 +1218,11 @@ export interface EventSeriesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  categories?: T;
   games?: T;
   freeplayGames?: T;
-  dates?:
-    | T
-    | {
-        slug?: T;
-        title?: T;
-        startDate?: T;
-        endDate?: T;
-        startTime?: T;
-        endTime?: T;
-        location?: T;
-        isCancelled?: T;
-        cardThumbnail?:
-          | T
-          | {
-              media?: T;
-              path?: T;
-              alt?: T;
-            };
-        heroBanner?:
-          | T
-          | {
-              media?: T;
-              path?: T;
-              alt?: T;
-            };
-        heroBannerMobile?:
-          | T
-          | {
-              media?: T;
-              path?: T;
-              alt?: T;
-            };
-        description?:
-          | T
-          | {
-              text?:
-                | T
-                | {
-                    content?:
-                      | T
-                      | {
-                          title?:
-                            | T
-                            | {
-                                title?: T;
-                                id?: T;
-                                blockName?: T;
-                              };
-                          paragraph?:
-                            | T
-                            | {
-                                paragraphs?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      id?: T;
-                                    };
-                                id?: T;
-                                blockName?: T;
-                              };
-                          list?:
-                            | T
-                            | {
-                                items?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      id?: T;
-                                    };
-                                id?: T;
-                                blockName?: T;
-                              };
-                          citation?:
-                            | T
-                            | {
-                                citationText?: T;
-                                id?: T;
-                                blockName?: T;
-                              };
-                        };
-                    id?: T;
-                    blockName?: T;
-                  };
-              statistics?:
-                | T
-                | {
-                    stats?:
-                      | T
-                      | {
-                          value?: T;
-                          type?: T;
-                          plus?: T;
-                          label?: T;
-                          sublabel?: T;
-                          id?: T;
-                        };
-                    id?: T;
-                    blockName?: T;
-                  };
-              gallery?:
-                | T
-                | {
-                    title?: T;
-                    subtitle?: T;
-                    images?:
-                      | T
-                      | {
-                          image?:
-                            | T
-                            | {
-                                media?: T;
-                                path?: T;
-                                alt?: T;
-                              };
-                          id?: T;
-                        };
-                    id?: T;
-                    blockName?: T;
-                  };
-            };
-        partners?: T;
-        games?: T;
-        freeplayGames?: T;
-        registrationOpen?: T;
-        weezeventCode?: T;
-        transports?:
-          | T
-          | {
-              metro?:
-                | T
-                | {
-                    lines?:
-                      | T
-                      | {
-                          value?: T;
-                          id?: T;
-                        };
-                    station?: T;
-                    walkTimeInMin?: T;
-                    id?: T;
-                  };
-              bus?:
-                | T
-                | {
-                    lines?:
-                      | T
-                      | {
-                          value?: T;
-                          id?: T;
-                        };
-                    station?: T;
-                    walkTimeInMin?: T;
-                    id?: T;
-                  };
-              tramway?:
-                | T
-                | {
-                    lines?:
-                      | T
-                      | {
-                          value?: T;
-                          id?: T;
-                        };
-                    station?: T;
-                    walkTimeInMin?: T;
-                    id?: T;
-                  };
-              car?:
-                | T
-                | {
-                    parkings?:
-                      | T
-                      | {
-                          name?: T;
-                          address?: T;
-                          distanceInMeters?: T;
-                          walkTimeInMin?: T;
-                          id?: T;
-                        };
-                  };
-            };
-        id?: T;
-      };
+  randomizeFreeplayGames?: T;
+  steps?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

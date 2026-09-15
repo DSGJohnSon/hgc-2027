@@ -104,31 +104,55 @@ export const toEvent = (doc: Raw): Event =>
     isCancelled: Boolean(doc.isCancelled),
   }) as Event
 
-/** Étape d'une série — forme `SeriesDate`. */
-const toSeriesDate = (row: Raw): SeriesDate =>
-  compact({
-    id: String(row.slug ?? ''),
-    title: row.title || undefined,
-    startDate: toDateString(row.startDate),
-    endDate: row.endDate ? toDateString(row.endDate) : undefined,
-    startTime: row.startTime || undefined,
-    endTime: row.endTime || undefined,
-    location: String(row.location ?? ''),
-    description: row.description?.length ? toDescription(row.description) : undefined,
-    weezeventCode: row.weezeventCode || undefined,
-    registrationOpen: Boolean(row.registrationOpen),
-    isCancelled: Boolean(row.isCancelled),
-    cardThumbnail: resolveImage(row.cardThumbnail) ?? '',
-    heroBanner: resolveImage(row.heroBanner) ?? '',
-    heroBannerMobile: resolveImage(row.heroBannerMobile) ?? '',
-    freeplayGames: toSlugs(row.freeplayGames),
-    gameId: toSlugs(row.games),
-    transports: toTransports(row.transports),
-    partners: row.partners?.length ? toPartners(row.partners) : undefined,
-  }) as SeriesDate
+/** Valeurs propres à l'étape si elle en a, sinon celles de la série. */
+const ownOr = <T>(own: T[], inherited: T[]): T[] => (own.length > 0 ? own : inherited)
 
-/** Série d'événements — forme `EventSeries`. */
-export const toEventSeries = (doc: Raw): EventSeries =>
+/**
+ * Étape d'une série — forme `SeriesDate`.
+ *
+ * Une étape est un événement rattaché à une série. Tout ce qu'elle laisse vide
+ * (visuels, description, catégories, jeux, partenaires) est repris de la série :
+ * les pages reçoivent des valeurs déjà résolues et n'ont pas à gérer l'héritage.
+ */
+const toSeriesDate = (doc: Raw, series: Raw): SeriesDate => {
+  const ownFreeplayGames = toSlugs(doc.freeplayGames)
+
+  return compact({
+    id: String(doc.slug ?? ''),
+    type: doc.type ?? 'event',
+    title: doc.title || undefined,
+    startDate: toDateString(doc.startDate),
+    endDate: doc.endDate ? toDateString(doc.endDate) : undefined,
+    startTime: doc.startTime || undefined,
+    endTime: doc.endTime || undefined,
+    location: String(doc.location ?? ''),
+    description: ownOr(toDescription(doc.description), toDescription(series.description)),
+    weezeventCode: doc.weezeventCode || undefined,
+    registrationOpen: Boolean(doc.registrationOpen),
+    isCancelled: Boolean(doc.isCancelled),
+    cardThumbnail:
+      resolveImage(doc.cardThumbnail) ?? resolveImage(series.cardThumbnail) ?? '',
+    heroBanner: resolveImage(doc.heroBanner) ?? resolveImage(series.heroBanner) ?? '',
+    heroBannerMobile:
+      resolveImage(doc.heroBannerMobile) ?? resolveImage(series.heroBannerMobile) ?? '',
+    categoryId: ownOr(toSlugs(doc.categories), toSlugs(series.categories)),
+    gameId: ownOr(toSlugs(doc.games), toSlugs(series.games)),
+    freeplayGames: ownOr(ownFreeplayGames, toSlugs(series.freeplayGames)),
+    randomizeFreeplayGames: Boolean(
+      ownFreeplayGames.length > 0 ? doc.randomizeFreeplayGames : series.randomizeFreeplayGames,
+    ),
+    transports: toTransports(doc.transports),
+    partners: ownOr(toPartners(doc.partners), toPartners(series.partners)),
+  }) as SeriesDate
+}
+
+/**
+ * Série d'événements — forme `EventSeries`.
+ *
+ * `steps` sont les événements rattachés à la série ; ils deviennent ses `dates`,
+ * dans l'ordre chronologique.
+ */
+export const toEventSeries = (doc: Raw, steps: Raw[]): EventSeries =>
   compact({
     id: String(doc.slug ?? ''),
     type: 'serie',
@@ -137,12 +161,16 @@ export const toEventSeries = (doc: Raw): EventSeries =>
     cardThumbnail: resolveImage(doc.cardThumbnail) ?? '',
     heroBanner: resolveImage(doc.heroBanner) ?? '',
     heroBannerMobile: resolveImage(doc.heroBannerMobile) ?? '',
+    categoryId: toSlugs(doc.categories),
     freeplayGames: toSlugs(doc.freeplayGames),
+    randomizeFreeplayGames: Boolean(doc.randomizeFreeplayGames),
     gameId: toSlugs(doc.games),
     description: toDescription(doc.description),
     partners: toPartners(doc.partners),
     isCancelled: Boolean(doc.isCancelled),
-    dates: Array.isArray(doc.dates) ? doc.dates.map(toSeriesDate) : [],
+    dates: steps
+      .map((step) => toSeriesDate(step, doc))
+      .sort((a, b) => a.startDate.localeCompare(b.startDate)),
   }) as EventSeries
 
 /** Actualité — forme `Actualities`. */

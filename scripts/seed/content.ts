@@ -3,6 +3,7 @@ import type { Payload } from 'payload'
 import { actualites } from '@/data/actualites'
 import { events } from '@/data/events'
 import { eventSeries } from '@/data/event-series'
+import { relationId } from '@/payload/utils'
 
 import {
   buildIndex,
@@ -103,13 +104,15 @@ export const seedEvents = async (payload: Payload) => {
         weezeventCode: event.weezeventCode ?? '',
         transports: transports(event.transports as Raw),
       },
-      { versioned: true },
+      // Un événement hors série : ne pas confondre avec une étape de même slug.
+      { versioned: true, match: (doc) => !relationId(doc.series) },
     )
   }
   console.log(`  ${events.length} événements`)
 
+  let stepCount = 0
   for (const series of eventSeries) {
-    await upsert(
+    const seriesId = await upsert(
       payload,
       'event-series',
       series.id,
@@ -122,9 +125,23 @@ export const seedEvents = async (payload: Payload) => {
         description: toDescriptionBlocks(series.description as Raw[]),
         games: resolveIds(series.gameId, gameIndex, series.id),
         freeplayGames: resolveIds(series.freeplayGames, gameIndex, series.id),
-        dates: series.dates.map((date) => ({
-          slug: date.id,
-          title: date.title ?? '',
+      },
+      { versioned: true },
+    )
+
+    // Les étapes sont des événements rattachés à la série
+    // (voir payload/collections/EventSeries.ts).
+    for (const date of series.dates) {
+      const context = `${series.id}/${date.id}`
+      await upsert(
+        payload,
+        'events',
+        date.id,
+        {
+          series: seriesId,
+          title: date.title || series.title,
+          type: 'event',
+          color: series.color,
           startDate: date.startDate,
           endDate: date.endDate || undefined,
           startTime: date.startTime ?? '',
@@ -132,21 +149,18 @@ export const seedEvents = async (payload: Payload) => {
           location: date.location,
           isCancelled: Boolean(date.isCancelled),
           ...visuals(date as Raw),
-          partners: partners(date.partners, `${series.id}/${date.id}`),
+          partners: partners(date.partners, context),
           description: toDescriptionBlocks(date.description as Raw[]),
-          games: resolveIds(date.gameId, gameIndex, `${series.id}/${date.id}`),
-          freeplayGames: resolveIds(
-            date.freeplayGames,
-            gameIndex,
-            `${series.id}/${date.id}`,
-          ),
+          games: resolveIds(date.gameId, gameIndex, context),
+          freeplayGames: resolveIds(date.freeplayGames, gameIndex, context),
           registrationOpen: Boolean(date.registrationOpen),
           weezeventCode: date.weezeventCode ?? '',
           transports: transports(date.transports as Raw),
-        })),
-      },
-      { versioned: true },
-    )
+        },
+        { versioned: true, match: (doc) => relationId(doc.series) === seriesId },
+      )
+      stepCount++
+    }
   }
-  console.log(`  ${eventSeries.length} séries`)
+  console.log(`  ${eventSeries.length} séries, ${stepCount} étapes`)
 }

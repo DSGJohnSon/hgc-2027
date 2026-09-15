@@ -15,10 +15,15 @@ import EventCarousel from "@/components/sections/EventCarousel";
 import {
   getCategories,
   getEvents,
+  getEventSeries,
   getGames,
   getHomePage,
 } from "@/lib/content";
-import { prepareEvents } from "@/lib/eventUtils";
+import {
+  mergeSeriesAndEvents,
+  prepareEvents,
+  prepareEventSeries,
+} from "@/lib/eventUtils";
 import { cn } from "@/lib/utils";
 import type { SocialNetwork } from "@/types/pages/home";
 
@@ -42,8 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [eventsData, games, categories, page] = await Promise.all([
+  const [eventsData, seriesData, games, categories, page] = await Promise.all([
     getEvents(),
+    getEventSeries(),
     getGames(),
     getCategories(),
     getHomePage(),
@@ -59,14 +65,15 @@ export default async function Home() {
     partners,
   } = page;
 
-  // `prepareEvents` calcule les statuts (à venir / en cours / passé / annulé),
-  // résout les jeux et catégories référencés par identifiant, et trie les
-  // prochains rendez-vous en tête. Mêmes règles que le carrousel des pages
-  // événement, limité aux 10 premières cartes.
-  const events = prepareEvents(
-    eventsData,
-    { games, categories },
-    undefined,
+  // `prepareEvents` et `prepareEventSeries` calculent les statuts (à venir / en
+  // cours / passé / annulé) et résolvent les jeux et catégories référencés par
+  // identifiant. Une série y figure comme un seul rendez-vous couvrant toutes
+  // ses étapes ; `mergeSeriesAndEvents` trie le tout (prochains rendez-vous en
+  // tête) et garde les 10 premières cartes.
+  const refs = { games, categories };
+  const events = mergeSeriesAndEvents(
+    prepareEventSeries(seriesData, refs),
+    prepareEvents(eventsData, refs),
     10,
   );
 

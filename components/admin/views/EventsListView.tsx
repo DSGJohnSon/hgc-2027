@@ -1,10 +1,12 @@
 'use client'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useMemo } from 'react'
 import Link from 'next/link'
 import { useConfig, useListQuery } from '@payloadcms/ui'
 
 import { CardListView } from './list/CardListView'
+import { useResolvedRelations } from './list/useResolvedRelations'
 import { useResolvedThumbnails } from './list/useResolvedThumbnails'
 
 /**
@@ -21,6 +23,7 @@ type EventDoc = {
   location?: string
   isCancelled?: boolean
   _status?: string
+  series?: unknown
   cardThumbnail?: { media?: unknown; path?: string }
 }
 
@@ -52,7 +55,7 @@ export const EventsListView = (props: any) => {
   } = config
 
   const { data } = useListQuery()
-  const docs: EventDoc[] = (data?.docs as EventDoc[]) ?? []
+  const docs: EventDoc[] = useMemo(() => (data?.docs as EventDoc[]) ?? [], [data])
 
   const thumbnailFor = useResolvedThumbnails(
     docs,
@@ -60,6 +63,10 @@ export const EventsListView = (props: any) => {
     apiRoute,
     serverURL,
   )
+
+  // Les étapes affichent le nom de leur série.
+  const seriesIds = useMemo(() => docs.map((doc) => doc.series).filter(Boolean), [docs])
+  const seriesFor = useResolvedRelations(seriesIds, 'event-series', apiRoute, serverURL, 'title')
 
   return (
     <CardListView<EventDoc>
@@ -71,6 +78,7 @@ export const EventsListView = (props: any) => {
         const thumbnail = thumbnailFor(doc)
         const status = statusOf(doc)
         const range = formatRange(doc)
+        const series = doc.series ? seriesFor(doc.series) : undefined
 
         return (
           <>
@@ -79,7 +87,9 @@ export const EventsListView = (props: any) => {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img alt="" loading="lazy" src={thumbnail} />
               ) : (
-                <span className="hgc-cards__media-empty">Pas de vignette</span>
+                <span className="hgc-cards__media-empty">
+                  {doc.series ? 'Vignette de la série' : 'Pas de vignette'}
+                </span>
               )}
             </Link>
 
@@ -90,6 +100,9 @@ export const EventsListView = (props: any) => {
               <h3 className="hgc-cards__title">
                 <Link href={href}>{doc.title || 'Sans titre'}</Link>
               </h3>
+              {doc.series ? (
+                <p className="hgc-cards__meta">Étape · {series?.name ?? 'Série'}</p>
+              ) : null}
               {range ? <p className="hgc-cards__meta">{range}</p> : null}
               {doc.location ? (
                 <p className="hgc-cards__meta hgc-cards__meta--muted">{doc.location}</p>

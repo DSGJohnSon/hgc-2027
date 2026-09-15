@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, GroupField, Validate } from 'payload'
 
 import { anyone, isEditor } from '../access'
 import { colorField } from '../fields/color'
@@ -8,8 +8,9 @@ import { transportsField } from '../fields/transports'
 import { textBlock } from '../blocks/text'
 import { galleryBlock, statisticsBlock } from '../blocks/media'
 import { CACHE_TAGS, revalidateCollection, revalidateOnDelete } from '../hooks/revalidate'
+import { relationId } from '../utils'
 
-/** Champs de visuels communs aux événements et aux étapes de série. */
+/** Champs de visuels communs aux événements et aux séries. */
 export const eventVisualFields = [
   imageField({
     name: 'cardThumbnail',
@@ -40,26 +41,77 @@ export const partnersField = {
 /** Blocs de contenu disponibles dans la description d'un événement. */
 export const eventDescriptionBlocks = [textBlock, statisticsBlock, galleryBlock]
 
+const seriesOf = (data: unknown) => relationId((data as { series?: unknown } | undefined)?.series)
+
+/** Une étape de série peut laisser ses visuels vides : elle reprend ceux de la série. */
+const optionalInSeries = (field: GroupField): GroupField => ({
+  ...field,
+  validate: (value, options) =>
+    seriesOf(options.data) || !field.validate ? true : field.validate(value, options),
+})
+
 /**
- * Événements — miroir de `data/events.ts`.
+ * Unicité de l'identifiant.
  *
- * Un événement peut être un tournoi, un événement libre, ou les deux (`both`).
- * Les séries d'événements sont gérées à part (collection `event-series`) : la page
- * `/evenements/[id]` cherche d'abord une série, puis un événement simple.
+ * Une étape vit à `/evenements/<série>/<identifiant>` : deux séries peuvent donc
+ * avoir chacune une étape « marcq-en-baroeul ». L'identifiant doit seulement être
+ * unique dans sa série ou, pour un événement hors série, parmi les événements
+ * hors série et les séries, qui partagent l'adresse `/evenements/<identifiant>`.
+ */
+const validateEventSlug: Validate = async (value, { data, id, req }) => {
+  if (typeof value !== 'string' || value.length === 0 || !req?.payload) return true
+
+  const seriesId = seriesOf(data)
+  const { docs } = await req.payload.find({
+    collection: 'events',
+    where: { slug: { equals: value } },
+    depth: 0,
+    draft: true,
+    pagination: false,
+    req,
+  })
+  const taken = docs.some(
+    (doc) => String(doc.id) !== String(id) && relationId(doc.series) === seriesId,
+  )
+  if (taken) {
+    return seriesId
+      ? 'Une autre étape de cette série utilise déjà cet identifiant.'
+      : 'Un autre événement utilise déjà cet identifiant.'
+  }
+
+  if (!seriesId) {
+    const series = await req.payload.count({
+      collection: 'event-series',
+      where: { slug: { equals: value } },
+      req,
+    })
+    if (series.totalDocs > 0) return 'Une série d’événements utilise déjà cet identifiant.'
+  }
+
+  return true
+}
+
+/**
+ * Événements — tournois, événements libres, ou les deux (`both`).
+ *
+ * Un événement peut être rattaché à une série (champ `series`) : il en devient
+ * une étape, publiée à l'adresse `/evenements/<série>/<identifiant>`. Les champs
+ * qu'une étape laisse vides reprennent les valeurs de sa série (voir
+ * `lib/content/mappers/entities.ts`).
  */
 export const Events: CollectionConfig = {
   slug: 'events',
   labels: { singular: 'Événement', plural: 'Événements' },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'startDate', 'type', 'isCancelled'],
+    defaultColumns: ['title', 'startDate', 'series', 'type', 'isCancelled'],
     group: 'Contenu',
-    description: 'Événements et tournois ponctuels.',
+    description: 'Événements et tournois, ponctuels ou étapes d’une série.',
     // Passe par le mode brouillon de Next.js (voir app/api/preview/route.ts) :
     // sans ça, ce bouton renverrait la version publiée, pas l'état courant.
     preview: (doc) =>
-      doc?.slug
-        ? `/api/preview?secret=${process.env.PAYLOAD_PREVIEW_SECRET}&collection=events&slug=${doc.slug}`
+      doc?.id
+        ? `/api/preview?secret=${process.env.PAYLOAD_PREVIEW_SECRET}&collection=events&id=${doc.id}`
         : null,
     components: {
       views: {
@@ -80,7 +132,22 @@ export const Events: CollectionConfig = {
   versions: { drafts: true, maxPerDoc: 20 },
   defaultSort: '-startDate',
   fields: [
-    slugField("Adresse de la page : /evenements/<identifiant>."),
+    slugField(
+      'Adresse de la page : /evenements/<identifiant>, ou /evenements/<série>/<identifiant> pour une étape.',
+      { unique: false, validate: validateEventSlug },
+    ),
+    {
+      name: 'series',
+      type: 'relationship',
+      relationTo: 'event-series',
+      label: 'Série',
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Rattache l’événement à une tournée, dont il devient une étape. Les visuels, la description, les jeux et les partenaires laissés vides reprennent ceux de la série.',
+      },
+    },
     {
       name: 'preview',
       type: 'ui',
@@ -118,7 +185,8 @@ export const Events: CollectionConfig = {
                   label: 'Couleur d’accent',
                   required: true,
                   defaultValue: '#6240cf',
-                  admin: { width: '50%' },
+                  // Une étape prend toujours la couleur de sa série.
+                  admin: { width: '50%', condition: (data) => !seriesOf(data) },
                 }),
               ],
             },
@@ -178,7 +246,8 @@ export const Events: CollectionConfig = {
         },
         {
           label: 'Visuels',
-          fields: [...eventVisualFields, partnersField],
+          description: 'Pour une étape de série, laissez vide pour reprendre les visuels de la série.',
+          fields: [...eventVisualFields.map(optionalInSeries), partnersField],
         },
         {
           label: 'Contenu',
@@ -189,6 +258,10 @@ export const Events: CollectionConfig = {
               label: 'Description',
               labels: { singular: 'Bloc', plural: 'Blocs' },
               blocks: eventDescriptionBlocks,
+              admin: {
+                description:
+                  'Pour une étape de série, laissez vide pour reprendre la description de la série.',
+              },
             },
           ],
         },

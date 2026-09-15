@@ -14,9 +14,10 @@ import type {
  * depuis le cache le reste du temps.
  *
  * `revalidateTag` n'existe que dans le contexte Next ; les scripts de seed appellent
- * la Local API hors de ce contexte, d'où le try/catch.
+ * la Local API hors de ce contexte, d'où le try/catch. Pour rafraîchir le site
+ * après un script, voir `app/api/revalidate/route.ts`.
  */
-const safeRevalidate = (tag: string) => {
+export const safeRevalidate = (tag: string) => {
   try {
     // Appel volontairement à un seul argument.
     //

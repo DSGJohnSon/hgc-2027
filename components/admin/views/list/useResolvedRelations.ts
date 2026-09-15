@@ -7,6 +7,9 @@ import { useEffect, useMemo, useState } from 'react'
  * pour l'affichage d'un aperçu en direct — l'état du formulaire ne contient
  * que les identifiants, jamais les documents peuplés (voir
  * `useResolvedThumbnails`, même principe pour les champs image).
+ *
+ * `labelField` désigne le champ servant de nom (`name` pour les jeux et les
+ * catégories, `title` pour les séries).
  */
 
 type Resolved = { id: string; name: string }
@@ -24,6 +27,7 @@ export const useResolvedRelations = (
   collection: string,
   apiRoute: string,
   serverURL: string,
+  labelField = 'name',
 ) => {
   const [docs, setDocs] = useState<Record<string, Resolved>>({})
 
@@ -49,8 +53,11 @@ export const useResolvedRelations = (
         if (!body?.docs) return
         setDocs((previous) => {
           const next = { ...previous }
-          for (const doc of body.docs as Array<{ id: string; name?: string }>) {
-            if (doc.name) next[String(doc.id)] = { id: String(doc.id), name: doc.name }
+          for (const doc of body.docs as Array<{ id: string } & Record<string, unknown>>) {
+            const label = doc[labelField]
+            if (typeof label === 'string' && label) {
+              next[String(doc.id)] = { id: String(doc.id), name: label }
+            }
           }
           return next
         })
@@ -60,7 +67,7 @@ export const useResolvedRelations = (
       })
 
     return () => controller.abort()
-  }, [unresolved, collection, apiRoute, serverURL])
+  }, [unresolved, collection, apiRoute, serverURL, labelField])
 
   return (id: unknown): Resolved | undefined => {
     const normalized = toId(id)

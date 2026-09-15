@@ -104,6 +104,8 @@ export default buildConfig({
       // colonnes est faite en CSS dans `app/(payload)/custom.scss`.
       beforeLogin: ['/components/admin/LoginIntro#LoginIntro'],
       afterLogin: ['/components/admin/LoginAside#LoginAside'],
+      // Logo du site en tête du menu latéral, qui ramène au tableau de bord.
+      beforeNavLinks: ['/components/admin/NavLogo#NavLogo'],
       views: {
         // Remplace la grille de collections par défaut.
         dashboard: {

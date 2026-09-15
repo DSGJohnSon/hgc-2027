@@ -1,8 +1,15 @@
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
 import { Metadata } from "next";
 import Link from "next/link";
 import { LuArrowLeft } from "react-icons/lu";
-import { getCategories, getEvents, getEventSeries, getGames } from "@/lib/content";
+import {
+  getCategories,
+  getEvents,
+  getEventSeries,
+  getEventSeriesPreview,
+  getGames,
+} from "@/lib/content";
 
 import { prepareEvents } from "@/lib/eventUtils";
 import EventHero from "../components/EventHero";
@@ -58,18 +65,18 @@ export default async function SeriesDatePage({ params, searchParams }: PageProps
   const search = await searchParams;
   const shouldOpenRegister = search.register === "true";
 
-  const eventSeriesData = await getEventSeries();
-  const series = eventSeriesData.find((s) => s.id === id);
+  // Mode aperçu (bouton « Aperçu » du backoffice) : série et étapes lues
+  // brouillons compris, sans passer par le cache public.
+  const { isEnabled: isPreview } = await draftMode();
+  const series = isPreview
+    ? await getEventSeriesPreview(id)
+    : (await getEventSeries()).find((s) => s.id === id);
   if (!series) notFound();
 
+  // Les champs laissés vides par l'étape sont déjà complétés avec ceux de la
+  // série (voir `lib/content/mappers/entities.ts`).
   const date = series.dates.find((d) => d.id === dateId);
   if (!date) notFound();
-
-  // Resolve inherited fields
-  const resolvedHeroBanner = date.heroBanner ?? series.heroBanner;
-  const resolvedHeroBannerMobile = date.heroBannerMobile ?? series.heroBannerMobile;
-  const resolvedFreeplayGames = date.freeplayGames ?? series.freeplayGames;
-  const resolvedPartners = date.partners ?? series.partners;
 
   const effectiveRegistrationOpen = date.isCancelled ? false : (date.registrationOpen ?? false);
 
@@ -88,12 +95,12 @@ export default async function SeriesDatePage({ params, searchParams }: PageProps
         title={pageTitle}
         type="event"
         categoryName={series.title}
-        bannerImage={resolvedHeroBanner}
-        bannerImageMobile={resolvedHeroBannerMobile}
+        bannerImage={date.heroBanner}
+        bannerImageMobile={date.heroBannerMobile}
         color={series.color}
         isCancelled={date.isCancelled}
-        heroBanner={resolvedHeroBanner}
-        heroBannerMobile={resolvedHeroBannerMobile}
+        heroBanner={date.heroBanner}
+        heroBannerMobile={date.heroBannerMobile}
       />
 
       <div className="relative">
@@ -123,9 +130,9 @@ export default async function SeriesDatePage({ params, searchParams }: PageProps
             weezeventCode={date.weezeventCode}
             eventTitle={pageTitle}
             registrationOpen={effectiveRegistrationOpen}
-            partners={resolvedPartners}
-            freeplayGames={resolvedFreeplayGames}
-            randomizeFreeplayGames={false}
+            partners={date.partners}
+            freeplayGames={date.freeplayGames ?? []}
+            randomizeFreeplayGames={date.randomizeFreeplayGames ?? false}
             isCancelled={date.isCancelled}
             gamesCatalogue={games}
           />

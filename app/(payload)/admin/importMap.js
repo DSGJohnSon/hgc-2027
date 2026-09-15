@@ -13,6 +13,7 @@ import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../componen
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { LoginAside as LoginAside_e84d66e7291b534a34ae52b16c5cfc3b } from '../../../components/admin/LoginAside'
 import { LoginIntro as LoginIntro_7b77c0a8bf5649eadd846d28c5d927eb } from '../../../components/admin/LoginIntro'
+import { NavLogo as NavLogo_62fd1b684515cecb7439e1dd363f1096 } from '../../../components/admin/NavLogo'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { Dashboard as Dashboard_86ced07c75806cf3261000d7201be5c2 } from '../../../components/admin/views/Dashboard'
 import { EventsHub as EventsHub_9aaab3a1f1669f7d412356370a67e445 } from '../../../components/admin/views/EventsHub'
@@ -34,6 +35,7 @@ export const importMap = {
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/LoginAside#LoginAside": LoginAside_e84d66e7291b534a34ae52b16c5cfc3b,
   "/components/admin/LoginIntro#LoginIntro": LoginIntro_7b77c0a8bf5649eadd846d28c5d927eb,
+  "/components/admin/NavLogo#NavLogo": NavLogo_62fd1b684515cecb7439e1dd363f1096,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "/components/admin/views/Dashboard#Dashboard": Dashboard_86ced07c75806cf3261000d7201be5c2,
   "/components/admin/views/EventsHub#EventsHub": EventsHub_9aaab3a1f1669f7d412356370a67e445,

@@ -1,9 +1,9 @@
-import { getEvents } from "@/lib/content";
+import { getEvents, getEventSeries } from "@/lib/content";
 
 // Les pages « Nos Services » sont volontairement absentes : ce sont des pages
 // d'attente, à ajouter ici au fur et à mesure de leur mise en ligne.
 export default async function sitemap() {
-  const eventsData = await getEvents();
+  const [eventsData, seriesData] = await Promise.all([getEvents(), getEventSeries()]);
 
   const baseUrl = "https://holidaygeekcup.fr";
 
@@ -59,5 +59,21 @@ export default async function sitemap() {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...eventPages];
+  // Une série et chacune de ses étapes : /evenements/<série>/<étape>.
+  const seriesPages = seriesData.flatMap((series) => [
+    {
+      url: `${baseUrl}/evenements/${series.id}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    ...series.dates.map((date) => ({
+      url: `${baseUrl}/evenements/${series.id}/${date.id}`,
+      lastModified: new Date(date.startDate),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+  ]);
+
+  return [...staticPages, ...eventPages, ...seriesPages];
 }

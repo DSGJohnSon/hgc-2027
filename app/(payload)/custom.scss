@@ -492,6 +492,26 @@ $hgc-dash-radius: 10px;
   pointer-events: none;
 }
 
+// ------------------------------------------------ menu latéral : logo
+//
+// `components/admin/NavLogo.tsx`, rendu par Payload au-dessus des liens du menu.
+
+.hgc-nav-logo {
+  display: inline-flex;
+  margin-bottom: 1.5rem;
+
+  img {
+    display: block;
+    height: 40px;
+    width: auto;
+  }
+
+  &:hover img,
+  &:focus-visible img {
+    opacity: 0.85;
+  }
+}
+
 // ---------------------------------------------------------- bloc admin
 
 .hgc-dash__admin {
@@ -586,6 +606,92 @@ $hgc-dash-radius: 10px;
 .hgc-hub__description {
   font-size: 0.85rem;
   color: var(--theme-elevation-600);
+}
+
+// Même principe que `.hgc-dash > .hgc-dash__cards` : marge sur la rangée de tête,
+// les sections qui suivent portent leur propre espacement.
+.hgc-hub > .hgc-hub__grid {
+  margin-bottom: 3rem;
+}
+
+.hgc-hub__hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+}
+
+// Liste des séries et de l'état de leurs étapes.
+.hgc-hub__series {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hgc-hub__series-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: $hgc-dash-radius;
+}
+
+// Vignette de la série (même visuel que sur le listing du site).
+.hgc-hub__series-media {
+  flex: 0 0 auto;
+  display: block;
+  width: 88px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: var(--theme-elevation-100);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.hgc-hub__series-info {
+  flex: 1 1 16rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.hgc-hub__series-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--theme-elevation-1000);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-blue-600);
+  }
+}
+
+.hgc-hub__series-meta {
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+}
+
+.hgc-hub__series-warning {
+  font-size: 0.8rem;
+  color: var(--theme-error-500);
+}
+
+.hgc-hub__series-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 // ------------------------------------------------------------------ écrans

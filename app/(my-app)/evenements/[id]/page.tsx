@@ -6,6 +6,7 @@ import {
   getEventPreview,
   getEvents,
   getEventSeries,
+  getEventSeriesPreview,
   getGames,
 } from "@/lib/content";
 import { prepareEvents } from "@/lib/eventUtils";
@@ -84,15 +85,18 @@ export default async function EventDetailPage({ params, searchParams }: PageProp
     getCategories(),
   ]);
 
+  // Mode aperçu (bouton « Aperçu » du backoffice) : lit la série ou l'événement,
+  // brouillon compris, sans passer par le cache public — voir app/api/preview/route.ts.
+  const { isEnabled: isPreview } = await draftMode();
+
   // Polymorphic detection: series takes priority
-  const series = eventSeriesData.find((s) => s.id === id);
+  const series =
+    (isPreview ? await getEventSeriesPreview(id) : undefined) ??
+    eventSeriesData.find((s) => s.id === id);
   if (series) {
     return <SeriesHubPage series={series} games={games} />;
   }
 
-  // Mode aperçu (bouton « Aperçu » du backoffice) : lit l'événement, brouillon
-  // compris, sans passer par le cache public — voir app/api/preview/route.ts.
-  const { isEnabled: isPreview } = await draftMode();
   const event = isPreview
     ? await getEventPreview(id)
     : eventsData.find((e) => e.id === id);

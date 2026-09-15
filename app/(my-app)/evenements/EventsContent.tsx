@@ -157,6 +157,7 @@ function EventsContent({ events, series, games, categories }: EventsContentProps
         cardThumbnail: item.cardThumbnail,
         color: item.color,
         dateCount: item.dates.length,
+        categoryId: item.categoryId,
         gameId: item.gameId,
         games: seriesGames,
         isCancelled: item.isCancelled,
@@ -229,9 +230,12 @@ function EventsContent({ events, series, games, categories }: EventsContentProps
     });
   }, [selectedCategories, selectedGames, searchQuery, processedEvents]);
 
-  // Filter series (by game and search only — series are not bound to categories)
+  // Filter series (by category, game and search)
   const filteredSeries = useMemo(() => {
     return processedSeries.filter((series) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        series.categoryId?.some(catId => selectedCategories.includes(catId));
       const gameMatch =
         selectedGames.length === 0 ||
         series.gameId?.some(gameId => selectedGames.includes(gameId));
@@ -241,9 +245,9 @@ function EventsContent({ events, series, games, categories }: EventsContentProps
         !searchQuery ||
         series.title.toLowerCase().includes(searchLower);
 
-      return gameMatch && searchMatch;
+      return categoryMatch && gameMatch && searchMatch;
     });
-  }, [selectedGames, searchQuery, processedSeries]);
+  }, [selectedCategories, selectedGames, searchQuery, processedSeries]);
 
   // Group and sort events
   const upcomingEvents = useMemo(() => {

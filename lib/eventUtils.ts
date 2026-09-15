@@ -148,7 +148,11 @@ export function prepareEventSeries(
         isUpcoming,
         isCancelled,
         date: minDate.toISOString().split("T")[0],
-        categories: [],
+        categories: s.categoryId
+          ?.map((catId) => refs.categories.find((c) => c.id === catId))
+          .filter(
+            (cat): cat is { id: string; name: string } => cat !== undefined,
+          ),
         games: s.gameId
           ?.map((gameId) => refs.games.find((g) => g.id === gameId))
           .filter(

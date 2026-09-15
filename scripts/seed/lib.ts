@@ -182,7 +182,14 @@ export const upsert = async (
    * et n'apparaît donc pas sur le site. Le contenu migré étant déjà en ligne, on
    * le publie directement.
    */
-  options: { versioned?: boolean } = {},
+  options: {
+    versioned?: boolean
+    /**
+     * Plusieurs documents peuvent partager un slug — deux étapes de séries
+     * différentes, par exemple. `match` désigne alors celui à mettre à jour.
+     */
+    match?: (doc: Raw) => boolean
+  } = {},
 ): Promise<string> => {
   const payloadData = options.versioned ? { ...data, slug, _status: 'published' } : { ...data, slug }
 
@@ -190,17 +197,18 @@ export const upsert = async (
     payload.find({
       collection,
       where: { slug: { equals: slug } },
-      limit: 1,
+      pagination: false,
       depth: 0,
       ...(options.versioned ? { draft: true } : {}),
     }),
   )
+  const match = (existing.docs as Raw[]).find((doc) => !options.match || options.match(doc))
 
-  if (existing.docs.length > 0) {
+  if (match) {
     const doc = await withRetry(() =>
       payload.update({
         collection,
-        id: (existing.docs[0] as Raw).id,
+        id: match.id,
         data: payloadData,
         disableTransaction: true,
       }),

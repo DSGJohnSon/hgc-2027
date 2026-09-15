@@ -4,8 +4,13 @@ export type DescriptionBlock = NonNullable<Event["description"]>[number];
 export type TransportsData = Event["transports"];
 export type Partner = NonNullable<Event["partners"]>[number];
 
+/**
+ * Étape d'une série : un événement rattaché à la série, dont les champs laissés
+ * vides ont déjà été complétés avec ceux de la série.
+ */
 export type SeriesDate = {
   id: string;
+  type?: Event["type"];
   title?: string;
   startDate: string;
   endDate?: string;
@@ -19,7 +24,9 @@ export type SeriesDate = {
   cardThumbnail: string;
   heroBanner: string;
   heroBannerMobile: string;
+  categoryId?: string[];
   freeplayGames?: string[];
+  randomizeFreeplayGames?: boolean;
   gameId?: string[];
   transports?: TransportsData;
   partners?: Partner[];
@@ -33,7 +40,9 @@ export type EventSeries = {
   cardThumbnail: string;
   heroBanner: string;
   heroBannerMobile: string;
+  categoryId?: string[];
   freeplayGames: string[];
+  randomizeFreeplayGames?: boolean;
   gameId?: string[];
   description?: DescriptionBlock[];
   partners?: Partner[];
@@ -50,6 +59,7 @@ export type SeriesListingItem = {
   cardThumbnail: string;
   color: string;
   dateCount: number;
+  categoryId?: string[];
   gameId?: string[];
   games?: Array<{ id: string; name: string; icon?: string; color?: string }>;
   isCancelled?: boolean;
