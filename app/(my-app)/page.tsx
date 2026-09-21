@@ -371,7 +371,7 @@ export default async function Home() {
               alt={community.photo.alt}
               width={500}
               height={500}
-              className="w-2/3 max-w-sm mx-auto -mt-2 mb-8 sm:-mt-6 sm:mb-12 lg:absolute lg:w-1/3 lg:max-w-none lg:right-6 lg:top-4 lg:m-0"
+              className="w-2/3 max-w-sm mx-auto -mt-2 sm:-mt-6 lg:self-end lg:w-full lg:h-full lg:object-contain lg:object-bottom"
             />
           )}
           {community.backgroundImage && (
