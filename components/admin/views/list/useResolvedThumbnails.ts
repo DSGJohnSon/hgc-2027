@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
+
+import { useResolvedDocs } from './docStore'
 
 /**
  * Résout la vignette d'une liste, y compris quand elle vient de la bibliothèque.
@@ -10,9 +12,9 @@ import { useEffect, useMemo, useState } from 'react'
  * (`path`). Or **la requête de liste de Payload s'exécute en `depth: 0`** : une
  * image envoyée n'arrive donc que sous forme d'identifiant, sans URL.
  *
- * Ce hook complète les identifiants manquants en une requête, et **seulement si
- * nécessaire** — tant que les vignettes sont des chemins hérités, il ne déclenche
- * aucun appel réseau.
+ * Les identifiants manquants sont confiés au cache partagé (`docStore`), qui
+ * regroupe les demandes et ne réclame jamais deux fois le même document. Tant
+ * que les vignettes sont des chemins hérités, aucun appel réseau n'est déclenché.
  */
 
 type ImageField = { media?: unknown; path?: string } | undefined | null
@@ -39,55 +41,30 @@ export const useResolvedThumbnails = <T,>(
   docs: T[],
   getField: (doc: T) => ImageField,
   apiRoute: string,
-  serverURL: string,
 ) => {
-  const [urls, setUrls] = useState<Record<string, string>>({})
-
-  const unresolved = useMemo(() => {
-    const ids = new Set<string>()
+  const ids = useMemo(() => {
+    const collected = new Set<string>()
     for (const doc of docs) {
       const id = pendingID(getField(doc))
-      if (id && !urls[id]) ids.add(id)
+      if (id) collected.add(id)
     }
-    return [...ids]
+    return [...collected]
     // `getField` est une fonction locale recréée à chaque rendu : l'inclure
-    // relancerait l'effet en boucle.
+    // relancerait le calcul en boucle.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [docs, urls])
+  }, [docs])
 
-  useEffect(() => {
-    if (unresolved.length === 0) return
-
-    const controller = new AbortController()
-    const query = unresolved.map((id) => `where[id][in][]=${encodeURIComponent(id)}`).join('&')
-
-    void fetch(`${serverURL}${apiRoute}/media?depth=0&limit=${unresolved.length}&${query}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((body) => {
-        if (!body?.docs) return
-        setUrls((previous) => {
-          const next = { ...previous }
-          for (const doc of body.docs as Array<{ id: string; url?: string }>) {
-            if (doc.url) next[String(doc.id)] = doc.url
-          }
-          return next
-        })
-      })
-      .catch(() => {
-        // Vignette non résolue : la card affiche son état vide, sans casser la liste.
-      })
-
-    return () => controller.abort()
-  }, [unresolved, apiRoute, serverURL])
+  const mediaFor = useResolvedDocs('media', ids, apiRoute)
 
   return (doc: T): string | undefined => {
     const field = getField(doc)
     const direct = directURL(field)
     if (direct) return direct
+
     const id = pendingID(field)
-    return id ? urls[id] : undefined
+    if (!id) return undefined
+
+    const url = mediaFor(id)?.url
+    return typeof url === 'string' ? url : undefined
   }
 }

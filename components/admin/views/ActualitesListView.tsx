@@ -35,13 +35,12 @@ export const ActualitesListView = (props: any) => {
   const { config } = useConfig()
   const {
     routes: { api: apiRoute },
-    serverURL,
   } = config
 
   const { data } = useListQuery()
   const docs: ActualiteDoc[] = (data?.docs as ActualiteDoc[]) ?? []
 
-  const thumbnailFor = useResolvedThumbnails(docs, (doc) => doc.image, apiRoute, serverURL)
+  const thumbnailFor = useResolvedThumbnails(docs, (doc) => doc.image, apiRoute)
 
   return (
     <CardListView<ActualiteDoc>

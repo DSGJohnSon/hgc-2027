@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
+
+import { useResolvedDocs } from './docStore'
 
 /**
  * Résout une liste d'identifiants de relation (`hasMany`) en `{ id, name }`,
@@ -10,6 +12,9 @@ import { useEffect, useMemo, useState } from 'react'
  *
  * `labelField` désigne le champ servant de nom (`name` pour les jeux et les
  * catégories, `title` pour les séries).
+ *
+ * Les requêtes passent par le cache partagé (`docStore`) : un même jeu référencé
+ * par dix événements n'est demandé qu'une fois.
  */
 
 type Resolved = { id: string; name: string }
@@ -26,51 +31,20 @@ export const useResolvedRelations = (
   ids: unknown[],
   collection: string,
   apiRoute: string,
-  serverURL: string,
   labelField = 'name',
 ) => {
-  const [docs, setDocs] = useState<Record<string, Resolved>>({})
-
-  const normalizedIds = useMemo(() => ids.map(toId).filter((id): id is string => Boolean(id)), [ids])
-
-  const unresolved = useMemo(
-    () => normalizedIds.filter((id) => !docs[id]),
-    [normalizedIds, docs],
+  const normalizedIds = useMemo(
+    () => [...new Set(ids.map(toId).filter((id): id is string => Boolean(id)))],
+    [ids],
   )
 
-  useEffect(() => {
-    if (unresolved.length === 0) return
-
-    const controller = new AbortController()
-    const query = unresolved.map((id) => `where[id][in][]=${encodeURIComponent(id)}`).join('&')
-
-    void fetch(
-      `${serverURL}${apiRoute}/${collection}?depth=0&limit=${unresolved.length}&${query}`,
-      { credentials: 'include', signal: controller.signal },
-    )
-      .then((response) => (response.ok ? response.json() : null))
-      .then((body) => {
-        if (!body?.docs) return
-        setDocs((previous) => {
-          const next = { ...previous }
-          for (const doc of body.docs as Array<{ id: string } & Record<string, unknown>>) {
-            const label = doc[labelField]
-            if (typeof label === 'string' && label) {
-              next[String(doc.id)] = { id: String(doc.id), name: label }
-            }
-          }
-          return next
-        })
-      })
-      .catch(() => {
-        // Non résolu : l'aperçu ignore simplement cette entrée.
-      })
-
-    return () => controller.abort()
-  }, [unresolved, collection, apiRoute, serverURL, labelField])
+  const docFor = useResolvedDocs(collection, normalizedIds, apiRoute)
 
   return (id: unknown): Resolved | undefined => {
     const normalized = toId(id)
-    return normalized ? docs[normalized] : undefined
+    if (!normalized) return undefined
+
+    const label = docFor(normalized)?.[labelField]
+    return typeof label === 'string' && label ? { id: normalized, name: label } : undefined
   }
 }

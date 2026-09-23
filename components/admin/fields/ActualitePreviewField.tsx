@@ -7,6 +7,7 @@ import { reduceFieldsToValues } from 'payload/shared'
 import type { Actualities } from '@/types/pages/detail-actualites'
 import { toActualite } from '@/lib/content/mappers/entities'
 import { useResolvedThumbnails } from '../views/list/useResolvedThumbnails'
+import { toLocalMediaPath } from '@/lib/media-url'
 
 /**
  * Aperçu de l'`ActualiteCard` dans la colonne latérale du formulaire
@@ -31,7 +32,6 @@ export const ActualitePreviewField = () => {
   const { config } = useConfig()
   const {
     routes: { api: apiRoute },
-    serverURL,
   } = config
   const [fields] = useAllFormFields()
 
@@ -45,19 +45,14 @@ export const ActualitePreviewField = () => {
     [logoId],
   )
   const [virtualDoc] = virtualDocs
-  const imageFor = useResolvedThumbnails(virtualDocs, (d) => d.image, apiRoute, serverURL)
+  const imageFor = useResolvedThumbnails(virtualDocs, (d) => d.image, apiRoute)
 
-  // Le hook renvoie une URL absolue (adaptée à un <img> classique). `ActualiteCard`
-  // utilise next/image, qui charge mal cette forme dans ce contexte embarqué —
-  // on ne garde que le chemin, toujours valide (même correctif que côté Jeux).
+  // `ActualiteCard` utilise next/image. Une image servie par l'application est
+  // ramenée à son chemin ; une image du CDN Blob garde son URL absolue, dont
+  // l'hôte est déclaré dans `images.remotePatterns` (même règle que côté Jeux).
   const resolvedImageUrl = useMemo(() => {
     const url = imageFor(virtualDoc)
-    if (!url) return undefined
-    try {
-      return new URL(url, window.location.origin).pathname
-    } catch {
-      return url
-    }
+    return url ? toLocalMediaPath(url) : undefined
   }, [imageFor, virtualDoc])
 
   const built = useMemo((): { actualite: Actualities; error: null } | { actualite: null; error: string } => {

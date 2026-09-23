@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { toLocalMediaPath } from '@/lib/media-url'
+
 /**
  * Utilitaires de conversion « document Payload → objet attendu par le site ».
  *
@@ -20,29 +22,6 @@ export const flatten = (rows: Raw[] | null | undefined, key = 'value'): string[]
   Array.isArray(rows)
     ? rows.map((row) => row?.[key]).filter((value): value is string => typeof value === 'string')
     : []
-
-/**
- * Ramène une URL de média Payload à un chemin relatif.
- *
- * `serverURL` étant renseigné (voir payload.config.ts), Payload renvoie des URLs
- * absolues du type `http://localhost:3000/api/media/file/x.png`. `next/image`
- * considère toute URL absolue comme distante et la fait passer par l'optimiseur,
- * qui depuis Next 16 refuse un hôte résolvant vers une IP privée — d'où les
- * `upstream image ... resolved to private ip` en local.
- *
- * Ces fichiers sont servis par cette application elle-même : on ne garde que le
- * chemin. Même ressource, mais traitée comme locale, et valable quel que soit le
- * domaine de déploiement. Les URLs pointant ailleurs (stockage externe, images de
- * démonstration) ne sont pas touchées.
- */
-const toLocalMediaPath = (url: string): string => {
-  try {
-    const { pathname, search } = new URL(url)
-    return pathname.startsWith('/api/media/') ? `${pathname}${search}` : url
-  } catch {
-    return url // déjà relative
-  }
-}
 
 /**
  * Résout un champ image en une simple URL.

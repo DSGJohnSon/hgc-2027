@@ -172,9 +172,26 @@ secours tant que le contenu migré n'a pas été validé.
 | `DATABASE_URL` | Vercel | MongoDB Atlas — penser à autoriser les IP Vercel |
 | `PAYLOAD_SECRET` | Vercel | chaîne aléatoire longue |
 | `BLOB_READ_WRITE_TOKEN` | Vercel | requis pour les images envoyées depuis le backoffice |
-| `PAYLOAD_SERVER_URL` | Vercel | `https://holidaygeekcup.fr` |
+| `PAYLOAD_SERVER_URL` | Vercel | `https://holidaygeekcup.fr` — ou **laisser vide** pour une détection automatique |
+| `PAYLOAD_CSRF_ORIGINS` | Vercel | alias supplémentaires (`https://www.holidaygeekcup.fr`…), séparés par des virgules |
 
 `DATABASE_URL` est également nécessaire **au build** : le sitemap lit la liste des
 événements dans la base.
+
+#### Attention à `PAYLOAD_SERVER_URL`
+
+Payload s'en sert aussi comme liste blanche anti-CSRF : il **ignore le cookie de
+session** sur toute requête dont l'en-tête `Origin` n'y figure pas. Comme les
+navigations (GET) n'envoient pas d'`Origin`, une valeur erronée donne une panne
+trompeuse — le backoffice s'ouvre et affiche l'utilisateur connecté, mais chaque
+écriture part en POST et se retrouve anonyme : envoi d'image bloqué sur un
+chargement infini, `Unauthorized, you must be logged in to make this request.`
+dans les logs, et déconnexion sans effet (`/admin/logout` → `/admin/login` →
+`/admin`, toujours connecté).
+
+Les deux causes : la variable restée sur `http://localhost:3000`, ou le
+backoffice ouvert depuis une URL non listée (`*.vercel.app`, `www.`). Les URL
+Vercel sont désormais autorisées d'office ; pour tout autre alias, utiliser
+`PAYLOAD_CSRF_ORIGINS`.
 
 Voir `docs/plan-backoffice.md` pour les décisions d'architecture.

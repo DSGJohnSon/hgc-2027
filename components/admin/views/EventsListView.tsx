@@ -51,7 +51,6 @@ export const EventsListView = (props: any) => {
   const { config } = useConfig()
   const {
     routes: { api: apiRoute },
-    serverURL,
   } = config
 
   const { data } = useListQuery()
@@ -61,12 +60,11 @@ export const EventsListView = (props: any) => {
     docs,
     (doc) => doc.cardThumbnail,
     apiRoute,
-    serverURL,
   )
 
   // Les étapes affichent le nom de leur série.
   const seriesIds = useMemo(() => docs.map((doc) => doc.series).filter(Boolean), [docs])
-  const seriesFor = useResolvedRelations(seriesIds, 'event-series', apiRoute, serverURL, 'title')
+  const seriesFor = useResolvedRelations(seriesIds, 'event-series', apiRoute, 'title')
 
   return (
     <CardListView<EventDoc>

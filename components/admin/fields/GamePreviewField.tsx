@@ -5,6 +5,7 @@ import { useConfig, useDocumentInfo, useField } from '@payloadcms/ui'
 
 import type { Game } from '@/types/games'
 import { useResolvedThumbnails } from '../views/list/useResolvedThumbnails'
+import { toLocalMediaPath } from '@/lib/media-url'
 
 /**
  * Aperçu de la `GameCard` dans la colonne latérale du formulaire d'édition,
@@ -36,7 +37,6 @@ export const GamePreviewField = () => {
   const { config } = useConfig()
   const {
     routes: { api: apiRoute },
-    serverURL,
   } = config
   const { initialData, isEditing } = useDocumentInfo()
 
@@ -70,21 +70,14 @@ export const GamePreviewField = () => {
   )
   const [virtualDoc] = virtualDocs
 
-  const logoFor = useResolvedThumbnails(virtualDocs, (d) => d.logo, apiRoute, serverURL)
-  const imgFor = useResolvedThumbnails(virtualDocs, (d) => d.img, apiRoute, serverURL)
-  const bgImgFor = useResolvedThumbnails(virtualDocs, (d) => d.bgImg, apiRoute, serverURL)
+  const logoFor = useResolvedThumbnails(virtualDocs, (d) => d.logo, apiRoute)
+  const imgFor = useResolvedThumbnails(virtualDocs, (d) => d.img, apiRoute)
+  const bgImgFor = useResolvedThumbnails(virtualDocs, (d) => d.bgImg, apiRoute)
 
-  // Le hook renvoie une URL absolue (adaptée à un <img> classique). `GameCard`
-  // utilise next/image, qui refuse toute URL absolue non déclarée dans
-  // `images.remotePatterns` : on ne garde que le chemin, toujours autorisé.
-  const toPath = (url: string | undefined) => {
-    if (!url) return url
-    try {
-      return new URL(url, window.location.origin).pathname
-    } catch {
-      return url
-    }
-  }
+  // `GameCard` utilise next/image. Une image servie par l'application est
+  // ramenée à son chemin ; une image du CDN Blob garde son URL absolue, dont
+  // l'hôte est déclaré dans `images.remotePatterns`.
+  const toPath = (url: string | undefined) => (url ? toLocalMediaPath(url) : url)
 
   const logo = toPath(logoFor(virtualDoc))
   const img = toPath(imgFor(virtualDoc))

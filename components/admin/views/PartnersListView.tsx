@@ -26,7 +26,6 @@ export const PartnersListView = (props: any) => {
   const { config } = useConfig()
   const {
     routes: { api: apiRoute },
-    serverURL,
   } = config
 
   const { data } = useListQuery()
@@ -34,7 +33,7 @@ export const PartnersListView = (props: any) => {
 
   // Le hook attend un champ image du projet (`{ media, path }`) ; ici le logo est
   // directement la relation, on l'y présente donc sous la clé `media`.
-  const logoFor = useResolvedThumbnails(docs, (doc) => ({ media: doc.logo }), apiRoute, serverURL)
+  const logoFor = useResolvedThumbnails(docs, (doc) => ({ media: doc.logo }), apiRoute)
 
   return (
     <CardListView<PartnerDoc>

@@ -14,7 +14,16 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
-      }
+      },
+      {
+        // Bibliothèque de médias en production : les images sont servies
+        // directement par le CDN de Vercel Blob, et non plus recopiées par une
+        // fonction serverless (voir `disablePayloadAccessControl` dans
+        // payload.config.ts). L'identifiant du store préfixe le domaine et
+        // change d'un projet à l'autre, d'où le joker.
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
     ],
   },
   async redirects() {

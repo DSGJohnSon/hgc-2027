@@ -6,6 +6,7 @@ import { reduceFieldsToValues } from 'payload/shared'
 
 import type { EventItem as EventItemType } from '@/types/pages/detail-event'
 import { useResolvedThumbnails } from '../views/list/useResolvedThumbnails'
+import { toLocalMediaPath } from '@/lib/media-url'
 import { useResolvedRelations } from '../views/list/useResolvedRelations'
 
 /**
@@ -31,7 +32,6 @@ export const EventPreviewField = () => {
   const { config } = useConfig()
   const {
     routes: { api: apiRoute },
-    serverURL,
   } = config
   const [fields] = useAllFormFields()
 
@@ -48,23 +48,18 @@ export const EventPreviewField = () => {
     [thumbnailId],
   )
   const [virtualDoc] = virtualDocs
-  const thumbnailFor = useResolvedThumbnails(virtualDocs, (d) => d.cardThumbnail, apiRoute, serverURL)
+  const thumbnailFor = useResolvedThumbnails(virtualDocs, (d) => d.cardThumbnail, apiRoute)
 
-  // Le hook renvoie une URL absolue (adaptée à un <img> classique). `EventItem`
-  // utilise next/image, qui charge mal cette forme dans ce contexte embarqué —
-  // on ne garde que le chemin, toujours valide (même correctif que côté Jeux).
+  // `EventItem` utilise next/image. Une image servie par l'application est
+  // ramenée à son chemin ; une image du CDN Blob garde son URL absolue, dont
+  // l'hôte est déclaré dans `images.remotePatterns` (même règle que côté Jeux).
   const resolvedThumbnail = useMemo(() => {
     const url = thumbnailFor(virtualDoc)
-    if (!url) return undefined
-    try {
-      return new URL(url, window.location.origin).pathname
-    } catch {
-      return url
-    }
+    return url ? toLocalMediaPath(url) : undefined
   }, [thumbnailFor, virtualDoc])
 
-  const categoryFor = useResolvedRelations(categoryIds, 'categories', apiRoute, serverURL)
-  const gameFor = useResolvedRelations(gameIds, 'games', apiRoute, serverURL)
+  const categoryFor = useResolvedRelations(categoryIds, 'categories', apiRoute)
+  const gameFor = useResolvedRelations(gameIds, 'games', apiRoute)
 
   const built = useMemo((): { event: EventItemType; error: null } | { event: null; error: string } => {
     try {

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getGames } from "@/lib/content";
+import { toLocalMediaPath } from "@/lib/media-url";
 import { GameCard } from "@/app/(my-app)/evenements/[id]/components/FreeplaySection";
 
 /**
@@ -19,17 +20,12 @@ export default async function GameCardEmbedPage({
 
   if (!game) notFound();
 
-  // `getGames()` renvoie l'URL absolue construite par Payload (`serverURL` +
-  // chemin). `GameCard` utilise next/image, qui charge mal cette forme dans
-  // ce contexte embarqué — on ne garde que le chemin, toujours valide.
-  const toPath = (url: string | undefined) => {
-    if (!url) return url;
-    try {
-      return new URL(url, "http://localhost").pathname;
-    } catch {
-      return url;
-    }
-  };
+  // `GameCard` utilise next/image. Une image servie par l'application est
+  // ramenée à son chemin ; une image du CDN Blob garde son URL absolue, dont
+  // l'hôte est déclaré dans `images.remotePatterns`.
+  const toPath = (url: string | undefined) =>
+    url ? toLocalMediaPath(url) : url;
+
   game.logo = toPath(game.logo);
   game.img = toPath(game.img);
   game.bgImg = toPath(game.bgImg);
