@@ -4,6 +4,9 @@
 // Contenu figé, extrait du backoffice Payload (global « about »)
 // le 2026-09-11, au moment où la gestion de
 // cette page a été retirée du CMS. Modifier directement ce fichier.
+//
+// Seule exception : les logos de la section « partenaires », lus dans le
+// référentiel Partenaires pour suivre les mises à jour faites au backoffice.
 // ============================================================
 
 /** Forme historique des sections : `switch (section.type)` dans la page. */
@@ -230,51 +233,20 @@ export const aboutSections: PageSection[] = [
     "data": {
       "subtitle": "NOS PARTENAIRES",
       "title": "ILS NOUS FONT CONFIANCE",
-      "logos": [
-        {
-          "alt": "ANCT (Agence Nationale de la Cohésion des Territoires)",
-          "src": "http://localhost:3000/api/media/file/logo_anct-1.png"
-        },
-        {
-          "alt": "Département du Pas de Calais (62)",
-          "src": "http://localhost:3000/api/media/file/logo_pas-de-calais-1.png"
-        },
-        {
-          "alt": "Erazer",
-          "src": "http://localhost:3000/api/media/file/logo_erazer-1.png"
-        },
-        {
-          "alt": "Ville de Lens",
-          "src": "http://localhost:3000/api/media/file/logo_ville-lens-1.png"
-        },
-        {
-          "alt": "Pathé",
-          "src": "http://localhost:3000/api/media/file/logo_pathe-1.png"
-        },
-        {
-          "alt": "Polar Lens",
-          "src": "http://localhost:3000/api/media/file/logo_polar-lens-1.png"
-        },
-        {
-          "alt": "Préfecture du Pas de Calais",
-          "src": "http://localhost:3000/api/media/file/logo_prefecture-pas-de-calais-1.png"
-        },
-        {
-          "alt": "RNJA (Réseau National des Juniors Associations)",
-          "src": "http://localhost:3000/api/media/file/logo_rnja-1.png"
-        },
-        {
-          "alt": "ESS France (Économie Sociale et Solidaire)",
-          "src": "http://localhost:3000/api/media/file/logo_ess-france-1.png"
-        },
-        {
-          "alt": "Agrément JEP (Jeunesse d'Éducation Populaire)",
-          "src": "http://localhost:3000/api/media/file/logo_agrement-jep-1.png"
-        },
-        {
-          "alt": "La Voix du Nord",
-          "src": "http://localhost:3000/api/media/file/logo_voix-du-nord-1.png"
-        }
+      // Noms exacts des fiches du référentiel Partenaires (backoffice) : le
+      // logo y est lu au rendu, voir `page.tsx`. Ordre d'affichage conservé.
+      "partners": [
+        "ANCT (Agence Nationale de la Cohésion des Territoires)",
+        "Département du Pas de Calais (62)",
+        "Erazer",
+        "Ville de Lens",
+        "Pathé",
+        "Polar Lens",
+        "Préfecture du Pas de Calais",
+        "RNJA (Réseau National des Juniors Associations)",
+        "ESS France (Économie Sociale et Solidaire)",
+        "Agrément JEP (Jeunesse d'Éducation Populaire)",
+        "La Voix du Nord"
       ]
     }
   }

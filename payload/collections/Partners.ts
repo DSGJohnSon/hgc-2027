@@ -4,7 +4,8 @@ import { anyone, isEditor } from '../access'
 import { CACHE_TAGS, revalidateMany, revalidateManyOnDelete } from '../hooks/revalidate'
 
 // Un partenaire est intégré au rendu des événements, des séries et des pages
-// d’accueil (joueurs et collectivités) : son cache propre ne suffit pas.
+// d’accueil (joueurs et collectivités) : son cache propre ne suffit pas. Ce
+// dernier sert à la page « À propos », restée hors CMS (`getPartners`).
 const AFFECTED_TAGS = [
   CACHE_TAGS.partners,
   CACHE_TAGS.events,

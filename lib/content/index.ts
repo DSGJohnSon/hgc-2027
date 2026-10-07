@@ -11,7 +11,14 @@ import type { Game } from '@/types/games'
 import type { CollectivitesPageData } from '@/types/pages/collectivites'
 import type { HomePageData } from '@/types/pages/home'
 
-import { toActualite, toCategory, toEvent, toEventSeries, toGame } from './mappers/entities'
+import {
+  toActualite,
+  toCategory,
+  toEvent,
+  toEventSeries,
+  toGame,
+  toPartners,
+} from './mappers/entities'
 import { toCollectivitesPage } from './mappers/collectivites'
 import { toHomePage } from './mappers/home'
 
@@ -67,6 +74,23 @@ export const getCategories = cached(
       depth: DEPTH,
     })
     return docs.map(toCategory)
+  },
+)
+
+/**
+ * Logos de tous les partenaires, le nom servant de texte alternatif.
+ *
+ * Utilisé par les pages restées hors du CMS (« À propos ») : elles listent leurs
+ * partenaires par nom dans le code et récupèrent ici le logo à jour. Les
+ * partenaires sans logo sont écartés (voir `toPartners`).
+ */
+export const getPartners = cached(
+  'partners',
+  CACHE_TAGS.partners,
+  async (): Promise<Array<{ alt: string; src: string }>> => {
+    const payload = await getPayloadClient()
+    const { docs } = await payload.find({ collection: 'partners', limit: LIMIT, depth: DEPTH })
+    return toPartners(docs)
   },
 )
 

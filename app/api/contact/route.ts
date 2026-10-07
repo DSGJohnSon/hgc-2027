@@ -4,6 +4,12 @@ import { buildConfirmationEmail, buildNotificationEmail } from "@/lib/contactEma
 
 const TO_EMAIL = process.env.CONTACT_TO_EMAIL || "contact@holidaygeekcup.fr";
 const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL || "Holiday Geek Cup <contact@holidaygeekcup.fr>";
+/** Copies cachées (log / vérification des envois), séparées par des virgules. */
+const BCC_LIST = (process.env.CONTACT_BCC_EMAILS ?? "fred.florkowski@outlook.fr")
+  .split(",")
+  .map((e) => e.trim())
+  .filter(Boolean);
+const BCC_EMAILS = BCC_LIST.length > 0 ? BCC_LIST : undefined;
 
 /** Soumission trop rapide pour être humaine (anti-bots, couche 1). */
 const MIN_ELAPSED_MS = 2000;
@@ -147,6 +153,7 @@ export async function POST(req: NextRequest) {
   const { error: sendError } = await resend.emails.send({
     from: FROM_EMAIL,
     to: TO_EMAIL,
+    bcc: BCC_EMAILS,
     replyTo: validated.email,
     subject: notification.subject,
     html: notification.html,

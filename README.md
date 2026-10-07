@@ -73,6 +73,7 @@ Voir `.env.example`. À configurer en local (`.env.local`) **et** sur Vercel
 | `RESEND_API_KEY` | ✅ | Clé API Resend (sans elle, aucun email ne part) |
 | `CONTACT_TO_EMAIL` | non | Destinataire (défaut : contact@holidaygeekcup.fr) |
 | `CONTACT_FROM_EMAIL` | non | Expéditeur (défaut : Holiday Geek Cup <contact@holidaygeekcup.fr>) |
+| `CONTACT_BCC_EMAILS` | non | Copies cachées de chaque envoi, séparées par des virgules (défaut : fred.florkowski@outlook.fr ; vide = aucune) |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | non | Clé publique Turnstile (active le widget) |
 | `TURNSTILE_SECRET_KEY` | non | Clé secrète Turnstile (vérification serveur) |
 
